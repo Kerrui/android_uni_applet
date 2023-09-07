@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "uni_applet"
 include ':app'
+include ':mylibrary'

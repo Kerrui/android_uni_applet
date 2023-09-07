@@ -2,6 +2,10 @@ plugins {
     id 'com.android.application'
 }
 
+def mfph = [
+        "apk.applicationId" : "com.example.uni_applet",
+]
+
 android {
     namespace 'com.example.uni_applet'
     compileSdk 33
@@ -12,7 +16,11 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = mfph
 
+        ndk {
+            abiFilters 'armeabi-v7a',"arm64-v8a"
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -21,6 +29,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    aaptOptions {
+        additionalParameters '--auto-add-overlay'
+        //noCompress 'foo', 'bar'
+        ignoreAssetsPattern "!.svn:!.git:.*:!CVS:!thumbs.db:!picasa.ini:!*.scc:*~"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -36,4 +49,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation project(':mylibrary')
 }
