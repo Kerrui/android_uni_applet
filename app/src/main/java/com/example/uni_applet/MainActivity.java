@@ -9,13 +9,14 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.mylibrary.AppLibSdk;
-import com.example.mylibrary.LibToast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +26,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LibToast.getInstance().showToast(MainActivity.this, "hello toast");
-                AppLibSdk.getInstance().openApplet(MainActivity.this);
-
-                //try {
-                //    IUniMP uniMP = DCUniMPSDK.getInstance().openUniMP(MainActivity.this, "__UNI__2A047DF");
-                //} catch (Exception e) {
-                //    e.printStackTrace();
-                //}
-
+                AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_A);
             }
         });
 

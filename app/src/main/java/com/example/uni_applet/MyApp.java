@@ -1,10 +1,10 @@
 package com.example.uni_applet;
 
-import android.app.Application;
-
 import com.example.mylibrary.AppLibSdk;
 
-public class MyApp extends Application {
+import io.dcloud.application.DCloudApplication;
+
+public class MyApp extends DCloudApplication {
 
     private static final String TAG = "MyApp";
 
