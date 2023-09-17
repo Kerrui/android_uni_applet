@@ -1,6 +1,6 @@
 package com.example.uni_applet;
 
-import com.example.mylibrary.AppLibSdk;
+import com.applet.mylibrary.AppLibSdk;
 
 import io.dcloud.application.DCloudApplication;
 
@@ -13,5 +13,6 @@ public class MyApp extends DCloudApplication {
         super.onCreate();
 
         AppLibSdk.getInstance().initialize(this);
+
     }
 }

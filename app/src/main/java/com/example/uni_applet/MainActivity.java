@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.example.mylibrary.AppLibSdk;
+import com.applet.mylibrary.AppLibSdk;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -23,10 +23,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
         findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_A);
+
+                AppLibSdk.getInstance().helloLib(MainActivity.this);
+
+                //AppLibSdk.getInstance().openCustomerService(MainActivity.this);
+
+
+
+
+                //AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_A);
+
+
+                //new Handler().postDelayed(new Runnable() {
+                //    @Override
+                //    public void run() {
+                //        AppLibSdk.getInstance().openApplet(MainActivity.this, "__UNI__2A047DF");
+                //    }
+                //}, 5000);
             }
         });
 
