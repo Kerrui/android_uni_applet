@@ -50,6 +50,7 @@ dependencies {
             'breakpad-build-release.aar',
             'debug-server-release.aar',
             'uniapp-v8-release.aar',
-            'uniMPSDK-V2-release.aar'
+            'uniMPSDK-V2-release.aar',
+            'AliyunPlayer-5.5.0.0-full.aar',
     ])
 }

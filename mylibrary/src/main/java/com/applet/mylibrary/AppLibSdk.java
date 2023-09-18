@@ -6,6 +6,8 @@ import android.util.Log;
 import com.alibaba.fastjson.JSONArray;
 import com.applet.feature.LibApp;
 import com.applet.feature.LibToast;
+import com.applet.image_browser.loader.MyImageLoader;
+import com.applet.image_browser.loader.ZoomMediaLoader;
 
 import io.dcloud.feature.sdk.DCSDKInitConfig;
 import io.dcloud.feature.sdk.DCUniMPSDK;
@@ -62,6 +64,8 @@ public class AppLibSdk {
 
     public void initialize(Context context) {
         LibApp.init(context);
+        ZoomMediaLoader.getInstance().init(new MyImageLoader());
+
         //try {
         //    WXSDKEngine.registerModule("AppletModule", AppletModule.class);
         //    WXSDKEngine.registerModule("ToolModule", ToolModule.class);

@@ -1,0 +1,4 @@
+<resources>
+    <item name="image_browser_item_key" type="id" />
+    <dimen name="image_browser_dimens_50_0_px">25.0dp</dimen>
+</resources>

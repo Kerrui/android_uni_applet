@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 -dontshrink
 -keep class com.applet.mylibrary.**{*;}
+-keep class com.applet.module.**{*;}
