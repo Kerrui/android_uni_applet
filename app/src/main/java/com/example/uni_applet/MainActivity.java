@@ -32,12 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
                 AppLibSdk.getInstance().helloLib(MainActivity.this);
 
-                //AppLibSdk.getInstance().openCustomerService(MainActivity.this);
-
-
-
-
-                //AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_A);
+                AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_A);
 
 
                 //new Handler().postDelayed(new Runnable() {

@@ -1,4 +1,4 @@
-package com.applet.module.preview;
+package com.applet.module;
 
 import io.dcloud.feature.uniapp.common.UniModule;
 
