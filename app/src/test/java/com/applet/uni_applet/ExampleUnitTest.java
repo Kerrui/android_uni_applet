@@ -1,4 +1,4 @@
-package com.example.mylibrary;
+package com.applet.uni_applet;
 
 import org.junit.Test;
 

@@ -12,7 +12,7 @@ import com.applet.image_browser.PreviewInfo;
 import com.applet.image_browser.loader.ZoomMediaLoader;
 import com.applet.image_browser.wight.PhotoViewPager;
 import com.applet.image_browser.wight.SmoothImageView;
-import com.example.mylibrary.R;
+import com.applet.library.R;
 
 import java.util.ArrayList;
 import java.util.List;

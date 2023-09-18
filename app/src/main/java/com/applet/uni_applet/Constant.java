@@ -1,4 +1,4 @@
-package com.example.uni_applet;
+package com.applet.uni_applet;
 
 public class Constant {
 

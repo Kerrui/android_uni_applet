@@ -7,6 +7,9 @@
             android:name="com.applet.image_browser.view.GPreviewActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <service android:name="info.mqtt.android.service.MqttService"/>
+        <service android:name="com.applet.mqtt.MqttClientService"/>
+
         <meta-data
             android:name="ScopedStorage"
             android:value="true" />

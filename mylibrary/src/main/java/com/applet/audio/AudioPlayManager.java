@@ -20,7 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.applet.feature.LibApp;
-import com.example.mylibrary.R;
+import com.applet.library.R;
 
 
 public class AudioPlayManager {

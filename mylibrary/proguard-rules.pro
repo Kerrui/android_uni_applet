@@ -22,3 +22,4 @@
 -dontshrink
 -keep class com.applet.mylibrary.**{*;}
 -keep class com.applet.module.**{*;}
+-keep class com.applet.mqtt.MqttClientService

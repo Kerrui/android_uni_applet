@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Parcelable;
 
 import com.applet.image_browser.view.GPreviewActivity;
-import com.example.mylibrary.R;
+import com.applet.library.R;
 
 import java.util.ArrayList;
 import java.util.List;

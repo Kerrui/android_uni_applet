@@ -1,4 +1,4 @@
-package com.example.uni_applet;
+package com.applet.uni_applet;
 
 import android.Manifest;
 import android.content.pm.PackageInfo;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.applet.mylibrary.AppLibSdk;
+import com.example.uni_applet.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;

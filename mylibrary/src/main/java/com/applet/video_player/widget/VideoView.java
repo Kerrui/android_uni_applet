@@ -21,7 +21,7 @@ import com.applet.video_player.VideoListener;
 import com.applet.video_player.bean.ActionBean;
 import com.applet.video_player.bean.VideoBean;
 import com.applet.video_player.util.TimeFormater;
-import com.example.mylibrary.R;
+import com.applet.library.R;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;

@@ -23,7 +23,7 @@ import com.applet.video_player.bean.ActionBean;
 import com.applet.video_player.bean.VideoBean;
 import com.applet.video_player.widget.AliVideoView;
 import com.applet.video_player.widget.VideoView;
-import com.example.mylibrary.R;
+import com.applet.library.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

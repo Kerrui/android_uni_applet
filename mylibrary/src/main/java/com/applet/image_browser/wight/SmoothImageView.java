@@ -20,7 +20,7 @@ import android.widget.ImageView;
 
 import com.applet.image_browser.photoview2.PhotoView;
 import com.applet.image_browser.util.ImageUtils;
-import com.example.mylibrary.R;
+import com.applet.library.R;
 
 
 /**

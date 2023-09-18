@@ -14,7 +14,7 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 
-import com.example.mylibrary.R;
+import com.applet.library.R;
 
 import java.lang.reflect.Method;
 

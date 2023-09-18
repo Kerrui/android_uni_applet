@@ -2,7 +2,7 @@ package com.applet.image_browser.util;
 
 import android.content.Context;
 
-import com.example.mylibrary.R;
+import com.applet.library.R;
 
 
 /**
