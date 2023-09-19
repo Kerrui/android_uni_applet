@@ -9,6 +9,8 @@ import com.applet.feature.LibToast;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
 
+import java.util.HashMap;
+
 import io.dcloud.feature.sdk.DCSDKInitConfig;
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IDCUniMPPreInitCallback;
@@ -18,6 +20,7 @@ public class AppLibSdk {
 
     private static final String TAG = "AppLibSdk";
 
+    private HashMap<String, IUniMP> mIUniMPHashMap;
     public AppLibSdk() {
     }
 
@@ -118,4 +121,6 @@ public class AppLibSdk {
             e.printStackTrace();
         }
     }
+
+
 }
