@@ -8,6 +8,7 @@ import com.applet.feature.LibApp;
 import com.applet.feature.LibToast;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
+import com.applet.nav_view.AnimApp;
 
 import java.util.HashMap;
 
@@ -68,6 +69,7 @@ public class AppLibSdk {
     public void initialize(Context context) {
         LibApp.init(context);
         ZoomMediaLoader.getInstance().init(new MyImageLoader());
+        AnimApp.init(context);
 
         //try {
         //    WXSDKEngine.registerModule("AppletModule", AppletModule.class);
