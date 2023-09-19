@@ -63,9 +63,4 @@ public class ToolModule extends UniModule {
     public void permissionRequest(JSONObject params, UniJSCallback callback) {
         PermissionManager.request(mUniSDKInstance.getContext(), params, callback);
     }
-
-    @UniJSMethod(uiThread = true)
-    public void close(JSONObject params, UniJSCallback callback) {
-        //AppLibSdk.getInstance().
-    }
 }
