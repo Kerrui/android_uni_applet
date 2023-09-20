@@ -3,6 +3,8 @@ package com.applet.upload;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class S3Info implements Parcelable {
 
     public DirInfo dir;
@@ -44,13 +46,13 @@ public class S3Info implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeParcelable(dir, i);
-        parcel.writeString(host);
-        parcel.writeString(upload_type);
-        parcel.writeString(date);
-        parcel.writeString(token);
-        parcel.writeString(cover_token);
-        parcel.writeString(cover_upload_type);
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeParcelable(dir, flags);
+        dest.writeString(host);
+        dest.writeString(upload_type);
+        dest.writeString(date);
+        dest.writeString(token);
+        dest.writeString(cover_token);
+        dest.writeString(cover_upload_type);
     }
 }

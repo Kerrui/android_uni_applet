@@ -31,7 +31,6 @@ import io.dcloud.feature.sdk.DCSDKInitConfig;
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IDCUniMPPreInitCallback;
 import io.dcloud.feature.sdk.Interface.IUniMP;
-import io.dcloud.feature.uniapp.UniSDKEngine;
 
 public class AppletManager {
 
@@ -58,11 +57,11 @@ public class AppletManager {
         try {
             WXSDKEngine.registerModule("Agora-RTC-EngineModule", AgoraRtcEngineModule.class);
             WXSDKEngine.registerModule("Agora-RTC-ChannelModule", AgoraRtcChannelModule.class);
-            UniSDKEngine.registerComponent("Agora-RTC-SurfaceView", AgoraRtcSurfaceView.class);
-            UniSDKEngine.registerComponent("Agora-RTC-TextureView", AgoraRtcTextureView.class);
-            UniSDKEngine.registerComponent("nav-anim-lottie", NavViewLottie.class);
-            UniSDKEngine.registerComponent("nav-anim-svga", NavViewSVGA.class);
-            UniSDKEngine.registerComponent("nav-blur", NavViewBlur.class);
+            WXSDKEngine.registerComponent("Agora-RTC-SurfaceView", AgoraRtcSurfaceView.class);
+            WXSDKEngine.registerComponent("Agora-RTC-TextureView", AgoraRtcTextureView.class);
+            WXSDKEngine.registerComponent("nav-anim-lottie", NavViewLottie.class);
+            WXSDKEngine.registerComponent("nav-anim-svga", NavViewSVGA.class);
+            WXSDKEngine.registerComponent("nav-blur", NavViewBlur.class);
             WXSDKEngine.registerModule("APPLetModule", AppletModule.class);
             WXSDKEngine.registerModule("AudioModule", AudioModule.class);
             WXSDKEngine.registerModule("DBModule", DBModule.class);

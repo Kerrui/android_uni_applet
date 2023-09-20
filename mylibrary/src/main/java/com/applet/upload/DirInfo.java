@@ -3,7 +3,10 @@ package com.applet.upload;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class DirInfo implements Parcelable {
+
     public String path;
     public String small_url;
     public String cover_path;
@@ -37,10 +40,10 @@ public class DirInfo implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(path);
-        parcel.writeString(small_url);
-        parcel.writeString(cover_path);
-        parcel.writeString(cover_upload_type);
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(path);
+        dest.writeString(small_url);
+        dest.writeString(cover_path);
+        dest.writeString(cover_upload_type);
     }
 }

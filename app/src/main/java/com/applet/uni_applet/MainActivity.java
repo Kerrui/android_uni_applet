@@ -30,17 +30,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_A);
-
-
-                //new Handler().postDelayed(new Runnable() {
-                //    @Override
-                //    public void run() {
-                //        AppLibSdk.getInstance().openApplet(MainActivity.this, "__UNI__2A047DF");
-                //    }
-                //}, 5000);
+                AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_CANDY_DEV);
             }
         });
 

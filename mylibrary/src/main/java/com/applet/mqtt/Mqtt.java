@@ -126,6 +126,7 @@ public class Mqtt {
 
         @Override
         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+            Log.e(TAG, "onFailure: '----- mqtt connect fail " + exception.toString() );
             isConnecting = false;
             totalConnectingReturn = 0;
             if (mIMqttEventListener != null) {
