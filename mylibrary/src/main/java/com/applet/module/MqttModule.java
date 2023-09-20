@@ -97,7 +97,7 @@ public class MqttModule extends UniModule {
     }
 
     @UniJSMethod(uiThread = false)
-    public JSONObject checkStatusSync() {
+    public boolean checkStatusSync() {
         boolean status = false;
         if (mIMqttServiceAidlInterface != null) {
             try {
@@ -106,9 +106,7 @@ public class MqttModule extends UniModule {
                 e.printStackTrace();
             }
         }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("status", status);
-        return jsonObject;
+        return status;
     }
 
     @UniJSMethod(uiThread = true)

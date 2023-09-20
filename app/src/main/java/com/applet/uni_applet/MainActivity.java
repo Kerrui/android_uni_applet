@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                AppLibSdk.getInstance().helloLib(MainActivity.this);
 
                 AppLibSdk.getInstance().openApplet(MainActivity.this, Constant.APP_ID_A);
 

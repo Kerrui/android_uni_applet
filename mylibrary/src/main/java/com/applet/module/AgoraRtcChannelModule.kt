@@ -1,11 +1,10 @@
-package com.applet.module;
+package com.applet.module
 
 import com.alibaba.fastjson.JSONObject
 import com.applet.agora.RtcChannelManager
 import com.applet.agora.RtcEngineEventHandler
 import com.applet.agora.RtcEngineManager
 import com.applet.agora.UniCallback
-import io.agora.rtc2.RtcEngine
 import io.dcloud.feature.uniapp.annotation.UniJSMethod
 import io.dcloud.feature.uniapp.bridge.UniJSCallback
 import io.dcloud.feature.uniapp.common.UniModule

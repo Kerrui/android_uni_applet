@@ -73,6 +73,10 @@ dependencies {
             'uniMPSDK-V2-release.aar',
             'AliyunPlayer-5.5.0.0-full.aar',
             'serviceLibrary-release-335.aar',
+            'audio-mp3aac-release.aar',
+            'media-release.aar',
+            'oauth-google-release.aar',
+            'weex_videoplayer-release.aar',
     ])
 
     implementation 'androidx.appcompat:appcompat:1.0.0'

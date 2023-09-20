@@ -7,7 +7,23 @@ import android.util.Log;
 import com.applet.feature.LibApp;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
+import com.applet.module.AgoraRtcChannelModule;
+import com.applet.module.AgoraRtcEngineModule;
+import com.applet.module.AgoraRtcSurfaceView;
+import com.applet.module.AgoraRtcTextureView;
+import com.applet.module.AppletModule;
+import com.applet.module.AudioModule;
+import com.applet.module.DBModule;
+import com.applet.module.ImageBrowserModule;
+import com.applet.module.MqttModule;
+import com.applet.module.NavViewBlur;
+import com.applet.module.NavViewLottie;
+import com.applet.module.NavViewSVGA;
+import com.applet.module.PayModule;
+import com.applet.module.ToolModule;
+import com.applet.module.UploadModule;
 import com.applet.nav_view.AnimApp;
+import com.taobao.weex.WXSDKEngine;
 
 import java.util.HashMap;
 
@@ -15,6 +31,7 @@ import io.dcloud.feature.sdk.DCSDKInitConfig;
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IDCUniMPPreInitCallback;
 import io.dcloud.feature.sdk.Interface.IUniMP;
+import io.dcloud.feature.uniapp.UniSDKEngine;
 
 public class AppletManager {
 
@@ -38,31 +55,30 @@ public class AppletManager {
         ZoomMediaLoader.getInstance().init(new MyImageLoader());
         AnimApp.init(context);
 
-        //try {
-        //    WXSDKEngine.registerModule("AppletModule", AppletModule.class);
-        //    WXSDKEngine.registerModule("ToolModule", ToolModule.class);
-        //    WXSDKEngine.registerModule("ImageBrowserModule", ImageBrowserModule.class);
-        //    WXSDKEngine.registerModule("AudioModule", AudioModule.class);
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //    Log.e(TAG, "initialize: '初始化小程序 module 报错 ", e);
-        //}
+        try {
+            WXSDKEngine.registerModule("Agora-RTC-EngineModule", AgoraRtcEngineModule.class);
+            WXSDKEngine.registerModule("Agora-RTC-ChannelModule", AgoraRtcChannelModule.class);
+            UniSDKEngine.registerComponent("Agora-RTC-SurfaceView", AgoraRtcSurfaceView.class);
+            UniSDKEngine.registerComponent("Agora-RTC-TextureView", AgoraRtcTextureView.class);
+            UniSDKEngine.registerComponent("nav-anim-lottie", NavViewLottie.class);
+            UniSDKEngine.registerComponent("nav-anim-svga", NavViewSVGA.class);
+            UniSDKEngine.registerComponent("nav-blur", NavViewBlur.class);
+            WXSDKEngine.registerModule("APPLetModule", AppletModule.class);
+            WXSDKEngine.registerModule("AudioModule", AudioModule.class);
+            WXSDKEngine.registerModule("DBModule", DBModule.class);
+            WXSDKEngine.registerModule("ImageBrowserModule", ImageBrowserModule.class);
+            WXSDKEngine.registerModule("MqttModule", MqttModule.class);
+            WXSDKEngine.registerModule("PayModule", PayModule.class);
+            WXSDKEngine.registerModule("ToolModule", ToolModule.class);
+            WXSDKEngine.registerModule("UploadModule", UploadModule.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "initialize: '初始化小程序 module 报错 ", e);
+        }
 
-        //MenuActionSheetItem item = new MenuActionSheetItem("关于", "gy");
-        //MenuActionSheetItem item1 = new MenuActionSheetItem("获取当前页面url", "hqdqym");
-        //MenuActionSheetItem item2 = new MenuActionSheetItem("跳转到宿主原生测试页面", "gotoTestPage");
-        //List<MenuActionSheetItem> sheetItems = new ArrayList<>();
-        //sheetItems.add(item);
-        //sheetItems.add(item1);
-        //sheetItems.add(item2);
-        Log.i("unimp", "onCreate----");
         DCSDKInitConfig config = new DCSDKInitConfig.Builder()
                 .setCapsule(false)
-                //.setMenuDefFontSize("16px")
-                //.setMenuDefFontColor("#ff00ff")
-                //.setMenuDefFontWeight("normal")
-                //.setMenuActionSheetItems(sheetItems)
-                .setEnableBackground(false)//开启后台运行
+                .setEnableBackground(false)
                 .build();
         DCUniMPSDK.getInstance().initialize(context, config, new IDCUniMPPreInitCallback() {
             @Override

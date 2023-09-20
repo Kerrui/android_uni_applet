@@ -20,6 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontshrink
--keep class com.applet.mylibrary.AppLibSdk
+-keep class com.applet.mylibrary.AppLibSdk{*;}
 -keep class com.applet.module.**{*;}
--keep class com.applet.mqtt.MqttClientService
+-keep class com.applet.mqtt.MqttClientService{*;}

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 
 import java.util.List;
@@ -49,6 +50,25 @@ public class PermissionManager {
                         }
                     }
                 });
+    }
+
+    public static JSONObject checkAll(Context context) {
+        try {
+            boolean noticeOpen = permissionIsGranted(context, new String[]{com.hjq.permissions.Permission.POST_NOTIFICATIONS});
+            boolean cameraOpen = permissionIsGranted(context, new String[]{com.hjq.permissions.Permission.CAMERA});
+            boolean microphoneOpen = permissionIsGranted(context, new String[]{com.hjq.permissions.Permission.RECORD_AUDIO});
+            boolean storageOpen = permissionIsGranted(context, new String[]{Permission.READ_MEDIA_IMAGES, Permission.READ_MEDIA_VIDEO});
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("notice", noticeOpen);
+            jsonObject.put("camera", cameraOpen);
+            jsonObject.put("voice", microphoneOpen);
+            jsonObject.put("storage", storageOpen);
+            return jsonObject;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new JSONObject();
+        }
     }
 
     private static String[] parsePermissions(JSONObject params) {
