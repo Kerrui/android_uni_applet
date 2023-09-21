@@ -1,10 +1,11 @@
-package com.applet.mylibrary;
+package com.applet.feature;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.applet.feature.LibApp;
+import com.alibaba.fastjson.JSONObject;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
 import com.applet.module.AgoraRtcChannelModule;
@@ -22,15 +23,30 @@ import com.applet.module.NavViewSVGA;
 import com.applet.module.PayModule;
 import com.applet.module.ToolModule;
 import com.applet.module.UploadModule;
+import com.applet.feature.util.MD5;
+import com.applet.feature.util.Util;
 import com.applet.nav_view.AnimApp;
+import com.applet.tool.ToolUtils;
 import com.taobao.weex.WXSDKEngine;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 import io.dcloud.feature.sdk.DCSDKInitConfig;
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IDCUniMPPreInitCallback;
 import io.dcloud.feature.sdk.Interface.IUniMP;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class AppletManager {
 
@@ -48,6 +64,20 @@ public class AppletManager {
     }
 
     private HashMap<String, IUniMP> mIUniMPHashMap = new HashMap<>();
+
+
+    private String getCurrentProcessName(Context context) {
+        int pid = android.os.Process.myPid();
+        String processName = "";
+        ActivityManager manager = (ActivityManager) context.getSystemService
+                (Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                processName = process.processName;
+            }
+        }
+        return processName;
+    }
 
     public void initialize(Context context) {
         LibApp.init(context);
@@ -85,6 +115,10 @@ public class AppletManager {
                 Log.e(TAG, "onInitFinished: " + (b ? "success" : "fail"));
             }
         });
+
+        String processName = getCurrentProcessName(context);
+        if (!context.getPackageName().equals(processName)) return;
+        initAppletSource(context);
     }
 
     public void openApplet(Context context, String appId) {
@@ -112,5 +146,59 @@ public class AppletManager {
         if (!uniMP.isRuning()) return;
         uniMP.closeUniMP();
         mIUniMPHashMap.remove(cAppId);
+    }
+
+    private void initAppletSource(Context context) {
+        String deviceId = ToolUtils.getUniqueID(context);
+        String sha1 = AppSigning.getSha1(context);
+        String url = LibConstant.getHost() + "/config/index";
+        OkHttpClient client = new OkHttpClient.Builder()
+                .build();
+
+        long timeMillis = System.currentTimeMillis();
+        String nonce = MD5.encrypt(Util.getRandomStringArray(10) + timeMillis, true);
+
+        HashMap<String, Object> apiParams = new HashMap<>();
+        apiParams.put("k", Util.getK(context, sha1, deviceId));
+        apiParams.put("times", timeMillis);
+        apiParams.put("nonce", nonce);
+        HashMap<String, Object> infoMap = new HashMap<>();
+        infoMap.put("pkg", context.getPackageName());
+        infoMap.put("device_id", deviceId);
+        infoMap.put("device", "android");
+        infoMap.put("device_version", android.os.Build.VERSION.RELEASE);
+        infoMap.put("device_model", android.os.Build.MODEL);
+        infoMap.put("sdk_version", LibConstant.SDK_VERSION);
+        infoMap.put("zone", TimeZone.getDefault().getID());
+        infoMap.put("client_language", Locale.getDefault().getLanguage());
+        infoMap.put("app_version", Util.getVersionName(context));
+        infoMap.put("a_str", sha1);
+        apiParams.put("info", infoMap);
+        Map<String, Object> apiParamsSort = Util.sortMap(apiParams);
+
+        String apiParamsStr = Util.mapToBuildString(apiParamsSort, "").substring(1);
+        String apiParamsStrMd5 = MD5.encrypt(apiParamsStr, true) + LibConstant.getApiK();
+        apiParamsSort.put("sign", MD5.encrypt(apiParamsStrMd5, true));
+
+        String json = JSONObject.toJSONString(apiParamsSort);
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json"), json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        final Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.e(TAG, "onResponse: '----> ");
+                String result = response.body().string();
+                Log.e(TAG, "onResponse: '----> " + result);
+                call.cancel();
+            }
+        });
     }
 }

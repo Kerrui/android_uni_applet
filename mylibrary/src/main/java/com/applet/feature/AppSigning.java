@@ -1,4 +1,4 @@
-package com.applet.uni_applet;
+package com.applet.feature;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -8,9 +8,6 @@ import android.util.Log;
 
 import java.security.MessageDigest;
 
-/**
- * Created by Genda on 2023/9/8.
- */
 public class AppSigning {
 
    public final static String MD5 = "MD5";

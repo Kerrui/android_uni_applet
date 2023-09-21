@@ -1,7 +1,7 @@
 package com.applet.module;
 
 import com.alibaba.fastjson.JSONObject;
-import com.applet.mylibrary.AppletManager;
+import com.applet.feature.AppletManager;
 
 import io.dcloud.feature.uniapp.annotation.UniJSMethod;
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
