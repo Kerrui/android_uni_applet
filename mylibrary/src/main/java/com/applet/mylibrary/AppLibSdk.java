@@ -19,11 +19,11 @@ public class AppLibSdk {
         return AppLibSdkHolder.sInstance;
     }
 
-    public void initialize(Context context) {
+    public void initEngine(Context context) {
         AppletManager.getInstance().initialize(context);
     }
 
-    public void openApplet(Context context, String appId) {
-        AppletManager.getInstance().openApplet(context, appId);
+    public void openKFApp(Context context, String faceUrl, String uid, boolean openPerfect) {
+        AppletManager.getInstance().openKFApp(context, faceUrl, uid, openPerfect);
     }
 }

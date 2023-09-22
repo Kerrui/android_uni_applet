@@ -12,7 +12,7 @@ public class MyApp extends DCloudApplication {
     public void onCreate() {
         super.onCreate();
 
-        AppLibSdk.getInstance().initialize(this);
+        AppLibSdk.getInstance().initEngine(this);
 
     }
 }

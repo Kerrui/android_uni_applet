@@ -1,5 +1,6 @@
 package com.applet.feature.util;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -95,5 +96,23 @@ public class Util {
             e.printStackTrace();
         }
         return versionName;
+    }
+
+    public static boolean isPackageProcess(Context context) {
+        String processName = getCurrentProcessName(context);
+        return context.getPackageName().equals(processName);
+    }
+
+    private static String getCurrentProcessName(Context context) {
+        int pid = android.os.Process.myPid();
+        String processName = "";
+        ActivityManager manager = (ActivityManager) context.getSystemService
+                (Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                processName = process.processName;
+            }
+        }
+        return processName;
     }
 }

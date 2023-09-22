@@ -5,6 +5,11 @@ class LibConstant {
     private static String env = "dev";
     public static final String SDK_VERSION = "1.0.0";
 
+    public static final String SP_DIRECT_OPEN = "sp_direct_open";
+    public static final String SP_WGT_KE_FU = "sp_wgt_ke_fu";
+
+    public static final String SP_WGT_APPLET = "sp_wgt_applet";
+
     public static String getHost() {
         if (isDev()) return "https://bts.267girl.com";
         return "https://service.nbcustomchat.com";

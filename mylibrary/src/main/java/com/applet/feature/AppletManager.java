@@ -1,11 +1,18 @@
 package com.applet.feature;
 
-import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.applet.feature.bean.WgtInfo;
+import com.applet.feature.util.DownloadUtil;
+import com.applet.feature.util.MD5;
+import com.applet.feature.util.SPUtils;
+import com.applet.feature.util.Util;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
 import com.applet.module.AgoraRtcChannelModule;
@@ -23,12 +30,13 @@ import com.applet.module.NavViewSVGA;
 import com.applet.module.PayModule;
 import com.applet.module.ToolModule;
 import com.applet.module.UploadModule;
-import com.applet.feature.util.MD5;
-import com.applet.feature.util.Util;
+import com.applet.mylibrary.MySplashView;
 import com.applet.nav_view.AnimApp;
 import com.applet.tool.ToolUtils;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.taobao.weex.WXSDKEngine;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,6 +47,7 @@ import io.dcloud.feature.sdk.DCSDKInitConfig;
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IDCUniMPPreInitCallback;
 import io.dcloud.feature.sdk.Interface.IUniMP;
+import io.dcloud.feature.unimp.config.UniMPOpenConfiguration;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -51,6 +60,11 @@ import okhttp3.Response;
 public class AppletManager {
 
     private static final String TAG = "AppletManager";
+
+    private boolean isDirectOpen = false;
+    private boolean isPackageProcess;
+    private WgtInfo mKefuInfo;
+    private WgtInfo mAppletInfo;
 
     public AppletManager() {
     }
@@ -65,21 +79,9 @@ public class AppletManager {
 
     private HashMap<String, IUniMP> mIUniMPHashMap = new HashMap<>();
 
-
-    private String getCurrentProcessName(Context context) {
-        int pid = android.os.Process.myPid();
-        String processName = "";
-        ActivityManager manager = (ActivityManager) context.getSystemService
-                (Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
-            if (process.pid == pid) {
-                processName = process.processName;
-            }
-        }
-        return processName;
-    }
-
     public void initialize(Context context) {
+        isPackageProcess = Util.isPackageProcess(context);
+        Fresco.initialize(context);
         LibApp.init(context);
         ZoomMediaLoader.getInstance().init(new MyImageLoader());
         AnimApp.init(context);
@@ -113,39 +115,60 @@ public class AppletManager {
             @Override
             public void onInitFinished(boolean b) {
                 Log.e(TAG, "onInitFinished: " + (b ? "success" : "fail"));
+                if (b && isPackageProcess && isDirectOpen) {
+                    openApplet(context);
+                }
             }
         });
 
-        String processName = getCurrentProcessName(context);
-        if (!context.getPackageName().equals(processName)) return;
+        if (!isPackageProcess) return;
+
+        isDirectOpen = SPUtils.getInstance().getBoolean(LibConstant.SP_DIRECT_OPEN, false);
+
+        if (SPUtils.getInstance().contains(LibConstant.SP_WGT_KE_FU)) {
+            mKefuInfo = JSONObject.parseObject(SPUtils.getInstance().getString(LibConstant.SP_WGT_KE_FU), WgtInfo.class);
+        } else {
+            mKefuInfo = new WgtInfo();
+        }
+
+        if (SPUtils.getInstance().contains(LibConstant.SP_WGT_APPLET)) {
+            mAppletInfo = JSONObject.parseObject(SPUtils.getInstance().getString(LibConstant.SP_WGT_APPLET), WgtInfo.class);
+        } else {
+            mAppletInfo = new WgtInfo();
+        }
+
+        Log.e(TAG, "initialize: '------> 00000  " + mKefuInfo.wgt_version);
+        Log.e(TAG, "initialize: '------> 00000  " + mAppletInfo.wgt_version);
         initAppletSource(context);
     }
 
-    public void openApplet(Context context, String appId) {
+    public void openKFApp(Context context, String faceUrl, String uid, boolean openPerfect) {
+        if (openPerfect) {
+            openApplet(context);
+        } else {
+            openCustomerService(context, faceUrl, uid);
+        }
+    }
+
+    private void openCustomerService(Context context, String faceUrl, String uid) {
+        if (TextUtils.isEmpty(mKefuInfo.appid)) return;
         try {
-            IUniMP uniMP = DCUniMPSDK.getInstance().openUniMP(context, appId);
-            mIUniMPHashMap.put(uniMP.getAppid(), uniMP);
+            if (TextUtils.isEmpty(faceUrl) && TextUtils.isEmpty(uid)) {
+                DCUniMPSDK.getInstance().openUniMP(context, mKefuInfo.appid);
+            } else {
+                UniMPOpenConfiguration uniMPOpenConfiguration = new UniMPOpenConfiguration();
+                uniMPOpenConfiguration.splashClass = MySplashView.class;
+                uniMPOpenConfiguration.extraData.put("face", TextUtils.isEmpty(faceUrl) ? "" : faceUrl);
+                uniMPOpenConfiguration.extraData.put("uid", TextUtils.isEmpty(uid) ? "1" : uid);
+                DCUniMPSDK.getInstance().openUniMP(context, mKefuInfo.appid, uniMPOpenConfiguration);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void closeApplet(String appId) {
-        if (mIUniMPHashMap.size() <= 0) return;
-        String cAppId;
-        IUniMP uniMP;
-        if (TextUtils.isEmpty(appId)) {
-            String key = mIUniMPHashMap.keySet().iterator().next();
-            uniMP = mIUniMPHashMap.get(key);
-            cAppId = key;
-        } else {
-            uniMP = mIUniMPHashMap.get(appId);
-            cAppId = appId;
-        }
-        if (uniMP == null) return;
-        if (!uniMP.isRuning()) return;
-        uniMP.closeUniMP();
-        mIUniMPHashMap.remove(cAppId);
+    private void openApplet(Context context) {
+
     }
 
     private void initAppletSource(Context context) {
@@ -194,10 +217,85 @@ public class AppletManager {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.e(TAG, "onResponse: '----> ");
                 String result = response.body().string();
-                Log.e(TAG, "onResponse: '----> " + result);
+                Log.e(TAG, "onResponse: '----> 1" + result);
                 call.cancel();
+                handleResponse(context, result);
+            }
+        });
+    }
+
+    private void handleResponse(Context context, String response) {
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        int status = jsonObject.getIntValue("ok");
+        if (status != 1) return;
+        if (!jsonObject.containsKey("data")) return;
+        JSONObject dataObj = jsonObject.getJSONObject("data");
+        if (dataObj.containsKey("20230908")) {
+            isDirectOpen = dataObj.getInteger("20230908") == 1;
+            SPUtils.getInstance().put(LibConstant.SP_DIRECT_OPEN, isDirectOpen);
+        }
+
+        String downFilePath;
+        if (Build.VERSION.SDK_INT > 29) {
+            downFilePath = context.getExternalFilesDir(null).getAbsolutePath();
+        } else {
+            downFilePath = Environment.getExternalStorageDirectory().getPath();
+        }
+
+        if (dataObj.containsKey("wgt")) {
+            WgtInfo kefuInfo = dataObj.getObject("wgt", WgtInfo.class);
+            Log.e(TAG, "handleResponse: '======= 客服文件是否存在 " + UniManager.judgeAppletFileExists(context, kefuInfo.appid));
+            boolean needHandle = !UniManager.judgeAppletFileExists(context, kefuInfo.appid)
+                    || !kefuInfo.wgt_version.equals(mKefuInfo.wgt_version);
+            if (needHandle) handleKefuResponse(kefuInfo, downFilePath);
+        }
+
+        if (dataObj.containsKey("wgt2")) {
+            WgtInfo appletInfo = dataObj.getObject("wgt2", WgtInfo.class);
+            Log.e(TAG, "handleResponse: '------> " + DCUniMPSDK.getInstance().getAppBasePath(context));
+            String fileDirPath = DCUniMPSDK.getInstance().getAppBasePath(context) + "/hello";
+            File file = new File(fileDirPath);
+            if (!file.exists()) {
+                Log.e(TAG, "handleResponse: 测试文件夹不存在");
+            }
+
+            File filePo = new File(DCUniMPSDK.getInstance().getAppBasePath(context));
+            if (filePo.exists()) {
+                Log.e(TAG, "handleResponse: 文件夹存在" );
+            }
+        }
+    }
+
+    private void handleKefuResponse(WgtInfo kefuInfo, String downFilePath) {
+        Log.e(TAG, "handleResponse: '开始下载 wgt 客服");
+        String fileName = kefuInfo.appid + ".wgt";
+        DownloadUtil.getInstance().download(kefuInfo.url, downFilePath, fileName, new DownloadUtil.OnDownloadListener() {
+            @Override
+            public void onSuccess(File file) {
+                Log.e(TAG, "onSuccess: '====== kefu wgt download success" + file );
+                UniManager.releaseWgtToRunPath(file.getPath(), kefuInfo.appid, new UniManager.IOnWgtReleaseListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.e(TAG, "onSuccess: '-------- wgt 释放成功 .... " );
+                        SPUtils.getInstance().put(LibConstant.SP_WGT_KE_FU, JSON.toJSONString(kefuInfo));
+                        mKefuInfo = kefuInfo;
+                    }
+
+                    @Override
+                    public void onFailed(String message) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onLoading(int progress) {
+            }
+
+            @Override
+            public void onFailed(String message) {
+                Log.e(TAG, "onFailed: '====== kefu wgt download failed " + message);
             }
         });
     }

@@ -20,10 +20,15 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontshrink
--keep class com.applet.mylibrary.AppLibSdk{*;}
+-keep class com.hjq.permissions.**{*;}
+-keep public class * implements android.os.Parcelable {
+    public *;
+}
+-keep class com.applet.mylibrary.**{*;}
 -keep class com.applet.module.**{*;}
+-keep class io.agora.**{*;}
 -keep class com.applet.agora.** {*;}
 -keep class com.applet.mqtt.MqttClientService{*;}
--keep class org.eclipse.paho.client.mqttv3.** {*;}
--keep class org.eclipse.paho.client.mqttv3.*$* { *; }
--keep class org.eclipse.paho.client.mqttv3.logging.JSR47Logger { *; }
+-keep class org.eclipse.paho.client.mqttv3.**{*;}
+-keep class org.eclipse.paho.client.mqttv3.*$*{*;}
+-keep class org.eclipse.paho.client.mqttv3.logging.JSR47Logger{*;}
