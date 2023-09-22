@@ -22,8 +22,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String faceUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-r3Y_vyQLZ55F8hCsS65hQXKRoKcOqYrgw&usqp=CAU";
                 String uid = "1244522";
-                boolean openB = false;
-                AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, openB);
+                AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, true, false);
+            }
+        });
+
+        findViewById(R.id.btn_applet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppLibSdk.getInstance().openKFApp(MainActivity.this, "", "",true, true);
             }
         });
         //String[] PermissionString = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};

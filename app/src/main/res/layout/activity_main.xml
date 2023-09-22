@@ -19,4 +19,21 @@
         android:layout_height="wrap_content"
         android:text="点击我打开A面项目" />
 
+    <Button
+        android:id="@+id/btn_applet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Applet"/>
+    
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+        <ImageView
+            android:src="@drawable/hello"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </FrameLayout>
+
 </LinearLayout>

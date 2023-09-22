@@ -1,9 +1,5 @@
 package com.applet.feature;
 
-import android.content.Context;
-
-import java.io.File;
-
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.unimp.config.IUniMPReleaseCallBack;
 import io.dcloud.feature.unimp.config.UniMPReleaseConfiguration;
@@ -23,11 +19,6 @@ public class UniManager {
                 }
             }
         });
-    }
-
-    public static boolean judgeAppletFileExists(Context context, String appId) {
-        String fileDirPath = DCUniMPSDK.getInstance().getAppBasePath(context) + "/" + appId;
-        return new File(fileDirPath).exists();
     }
 
     public interface IOnWgtReleaseListener {
