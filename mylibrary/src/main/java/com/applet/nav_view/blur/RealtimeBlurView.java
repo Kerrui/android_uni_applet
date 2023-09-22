@@ -3,13 +3,19 @@ package com.applet.nav_view.blur;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -30,6 +36,7 @@ public class RealtimeBlurView extends View {
     private float mDownsampleFactor; // default 4
     private int mOverlayColor; // default #aaffffff
     private float mBlurRadius; // default 10dp (0 < r <= 25)
+    private float mRoundCornerRadius = 0;
 
     private final BlurImpl mBlurImpl;
     private boolean mDirty;
@@ -37,6 +44,7 @@ public class RealtimeBlurView extends View {
     private Canvas mBlurringCanvas;
     private boolean mIsRendering;
     private Paint mPaint;
+    private RectF mRectF;
     private final Rect mRectSrc = new Rect(), mRectDst = new Rect();
     // mDecorView should be the root view of the activity (even if you are on a different window like a dialog)
     private View mDecorView;
@@ -60,12 +68,15 @@ public class RealtimeBlurView extends View {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RealtimeBlurView);
             mBlurRadius = a.getDimension(R.styleable.RealtimeBlurView_realtimeBlurRadius,
                     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, context.getResources().getDisplayMetrics()));
+            mRoundCornerRadius = a.getDimension(R.styleable.RealtimeBlurView_realtimeBlurRoundCornerRadius,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, context.getResources().getDisplayMetrics()));
             mDownsampleFactor = a.getFloat(R.styleable.RealtimeBlurView_realtimeDownsampleFactor, 4);
             mOverlayColor = a.getColor(R.styleable.RealtimeBlurView_realtimeOverlayColor, 0xAAFFFFFF);
             a.recycle();
         }
 
         mPaint = new Paint();
+        mRectF = new RectF();
     }
 
     protected BlurImpl getBlurImpl() {
@@ -153,6 +164,14 @@ public class RealtimeBlurView extends View {
     public void setOverlayColor(int color) {
         if (mOverlayColor != color) {
             mOverlayColor = color;
+            invalidate();
+        }
+    }
+
+    public void setRoundCornerRadius(float roundCornerRadius) {
+        float v = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, roundCornerRadius, Resources.getSystem().getDisplayMetrics());
+        if (mRoundCornerRadius != v) {
+            this.mRoundCornerRadius = v;
             invalidate();
         }
     }
@@ -350,6 +369,24 @@ public class RealtimeBlurView extends View {
      * @param overlayColor
      */
     protected void drawBlurredBitmap(Canvas canvas, Bitmap blurredBitmap, int overlayColor) {
+        if (mRoundCornerRadius > 0) {
+            mRectF.right = getMeasuredWidth();
+            mRectF.bottom = getMeasuredHeight();
+            mPaint.reset();
+            mPaint.setAntiAlias(true);
+            BitmapShader shader = new BitmapShader(blurredBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            Matrix matrix = new Matrix();
+            matrix.postScale(mRectF.width() / blurredBitmap.getWidth(), mRectF.height() / blurredBitmap.getHeight());
+            shader.setLocalMatrix(matrix);
+            mPaint.setShader(shader);
+            canvas.drawRoundRect(mRectF, mRoundCornerRadius, mRoundCornerRadius, mPaint);
+
+            mPaint.reset();
+            mPaint.setAntiAlias(true);
+            mPaint.setColor(overlayColor);
+            canvas.drawRoundRect(mRectF, mRoundCornerRadius, mRoundCornerRadius, mPaint);
+            return;
+        }
         if (blurredBitmap != null) {
             mRectSrc.right = blurredBitmap.getWidth();
             mRectSrc.bottom = blurredBitmap.getHeight();

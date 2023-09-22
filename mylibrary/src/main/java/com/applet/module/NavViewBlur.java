@@ -34,4 +34,9 @@ public class NavViewBlur extends UniComponent<RealtimeBlurView> {
     public void setColor(String color) {
         getHostView().setOverlayColor(Color.parseColor(color));
     }
+
+    @UniComponentProp(name = "cornerRadius")
+    public void setCornerRadius(int cornerRadius) {
+        getHostView().setRoundCornerRadius(cornerRadius);
+    }
 }
