@@ -15,7 +15,6 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -347,7 +346,7 @@ public class RealtimeBlurView extends View {
     public void draw(Canvas canvas) {
         if (mIsRendering) {
             // Quit here, don't draw views above me
-            throw STOP_EXCEPTION;
+            //throw STOP_EXCEPTION;
         } else if (RENDERING_COUNT > 0) {
             // Doesn't support blurview overlap on another blurview
         } else {
