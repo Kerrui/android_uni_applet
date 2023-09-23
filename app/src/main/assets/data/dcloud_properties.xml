@@ -56,6 +56,7 @@
 			<module name="OAuth-QQ" value="io.dcloud.feature.oauth.qq.QQOAuthService"/>
 			<module name="OAuth-Sina" value="io.dcloud.feature.oauth.sina.SinaOAuthService"/>
 			<module name="OAuth-Qihoo" value="io.dcloud.oauth.qihoo.QihooOAuthService"/>
+			<module name="OAuth-Google" value="io.dcloud.feature.google.GoogleOAuthService"/>
 			<module name="OAuth-MiUi" value="io.dcloud.feature.oauth.miui.MiUiOAuthService"/>
 		</feature>
 		<feature name="Stream" value="io.dcloud.appstream.js.StreamAppFeatureImpl"/>
