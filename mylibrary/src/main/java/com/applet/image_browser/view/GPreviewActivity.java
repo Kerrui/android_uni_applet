@@ -1,7 +1,6 @@
 package com.applet.image_browser.view;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -25,8 +24,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 public class GPreviewActivity extends FragmentActivity {
-
-    private static final String TAG = "GPreviewActivity";
 
     public static IPreviewListener sIPreviewListener;
 
@@ -86,7 +83,6 @@ public class GPreviewActivity extends FragmentActivity {
         view_pager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Log.e(TAG, "onGlobalLayout: '-----> onGlobalLayout " + mIndex);
                 view_pager.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 if (mFragment.isVideo()) {
                     mFragment.startVideo();

@@ -3,7 +3,6 @@ package com.applet.video_player.widget;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -29,7 +28,6 @@ public class TextureRenderView extends TextureView implements IRenderView, Textu
     }
 
     private void init(Context context) {
-        Log.e("AliLivePlayerView", "init: TextureRenderView");
         setSurfaceTextureListener(this);
     }
 

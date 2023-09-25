@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.applet.feature.util.LogUtil;
 import com.applet.library.IMqttServiceAidlInterface;
 import com.applet.mqtt.Mqtt;
 import com.applet.mqtt.MqttClientService;
@@ -80,7 +80,7 @@ public class MqttModule extends UniModule {
         if (mIMqttServiceAidlInterface == null) {
             Intent intent = new Intent(mUniSDKInstance.getContext(), MqttClientService.class);
             mUniSDKInstance.getContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            Log.e(TAG, "connect: '-------> start execute");
+            LogUtil.t("mqtt connect: '-------> start execute");
         }
 
         Intent intent = new Intent(mUniSDKInstance.getContext(), MqttClientService.class);

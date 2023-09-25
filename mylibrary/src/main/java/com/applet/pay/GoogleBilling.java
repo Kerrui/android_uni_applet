@@ -2,7 +2,6 @@ package com.applet.pay;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -23,6 +22,7 @@ import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.applet.feature.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class GoogleBilling implements PurchasesUpdatedListener {
-
-    private static final String TAG = "PayModule";
 
     private static final int FAIL_CODE_CANCEL = 0;
     private static final int FAIL_CODE_DISCONNECT = -11;
@@ -127,7 +125,7 @@ public class GoogleBilling implements PurchasesUpdatedListener {
     @Override
     public void onPurchasesUpdated(@NonNull BillingResult billingResult, @Nullable List<Purchase> list) {
         if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null) {
-            Log.e(TAG, "onPurchasesUpdated: '-----> ");
+            LogUtil.t("onPurchasesUpdated: '----->");
             if (mOnBillingListener.productType().equals(BillingClient.ProductType.SUBS)) {
                 acknowledgePurchase();
             } else if (mOnBillingListener.productType().equals(BillingClient.ProductType.INAPP)) {
@@ -214,7 +212,7 @@ public class GoogleBilling implements PurchasesUpdatedListener {
         mBillingClient.querySkuDetailsAsync(params, new SkuDetailsResponseListener() {
             @Override
             public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @Nullable List<SkuDetails> skuDetailsList) {
-                Log.e(TAG, "onSkuDetailsResponse: ------> 获取购买商品列表 success " + sku);
+                LogUtil.t("onSkuDetailsResponse: ------> get goods list success " + sku);
                 if (skuDetailsList == null || skuDetailsList.size() <= 0) {
                     onFail(FAIL_CODE_SKU, billingResult.getResponseCode(), "sku get fail size 0 v4");
                     return;
@@ -244,7 +242,7 @@ public class GoogleBilling implements PurchasesUpdatedListener {
     private final PurchasesResponseListener mInAppPurchasesResponseListener = new PurchasesResponseListener() {
         @Override
         public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
-            Log.e(TAG, "consumePurchase: billingResult '----> " + billingResult.getResponseCode());
+            LogUtil.t("consumePurchase: billingResult '----> " + billingResult.getResponseCode());
 
             if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 onFail(FAIL_CODE_CONSUME_QUERY, billingResult.getResponseCode(), "inApp consume goods query fail");
@@ -257,7 +255,7 @@ public class GoogleBilling implements PurchasesUpdatedListener {
             }
 
             for (Purchase purchase : list) {
-                Log.e(TAG, "consumePurchase: '------> " + purchase.getOriginalJson());
+                LogUtil.t("consumePurchase: '------> " + purchase.getOriginalJson());
                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
                     ConsumeParams consumeParams = ConsumeParams.newBuilder()
                             .setPurchaseToken(purchase.getPurchaseToken())
@@ -266,7 +264,7 @@ public class GoogleBilling implements PurchasesUpdatedListener {
                         @Override
                         public void onConsumeResponse(@NonNull BillingResult billingResult, @NonNull String s) {
                             if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                                Log.e(TAG, "onConsumeResponse: -----> sku consume success " + purchase);
+                                LogUtil.t("onConsumeResponse: -----> sku consume success " + purchase);
                                 onSuccess(purchase.getOriginalJson());
                             } else {
                                 onFail(FAIL_CODE_CONSUME, billingResult.getResponseCode(), "inApp consume fail");
@@ -295,7 +293,7 @@ public class GoogleBilling implements PurchasesUpdatedListener {
     private final PurchasesResponseListener mSubsPurchasesResponseListener = new PurchasesResponseListener() {
         @Override
         public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
-            Log.e(TAG, "acknowledgePurchase: billingResult '----> " + billingResult.getResponseCode());
+            LogUtil.t("acknowledgePurchase: billingResult '----> " + billingResult.getResponseCode());
 
             if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 onFail(FAIL_CODE_ACKNOWLEDGE_QUERY, billingResult.getResponseCode(), "subs consume goods query fail");
@@ -308,7 +306,7 @@ public class GoogleBilling implements PurchasesUpdatedListener {
             }
 
             for (Purchase purchase : list) {
-                Log.e(TAG, "acknowledgePurchase: '------> " + purchase.getOriginalJson());
+                LogUtil.t("acknowledgePurchase: '------> " + purchase.getOriginalJson());
 
                 if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
                     AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()

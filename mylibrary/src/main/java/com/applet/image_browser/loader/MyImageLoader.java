@@ -3,9 +3,9 @@ package com.applet.image_browser.loader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.ImageView;
 
+import com.applet.library.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -13,7 +13,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.applet.library.R;
 import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -33,8 +32,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class MyImageLoader implements IZoomMediaLoader {
-
-    private static final String TAG = "MyImageLoader";
 
     private final Map<String, Bitmap> cache = new HashMap<>();
 
@@ -58,9 +55,6 @@ public class MyImageLoader implements IZoomMediaLoader {
 
     @Override
     public void displayImage(@NonNull Fragment context, @NonNull String path, ImageView imageView, @NonNull MySimpleTarget simpleTarget) {
-
-        Log.e(TAG, "displayImage: ----> preview img path = " + path);
-
         Uri pathUri;
         if (path.startsWith("http")) {
             pathUri = Uri.parse(path);

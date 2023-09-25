@@ -2,9 +2,9 @@ package com.applet.mqtt;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
+import com.applet.feature.util.LogUtil;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -65,7 +65,7 @@ public class Mqtt {
     }
 
     public Object connect(Context context, MqttInfo info) {
-        Log.e(TAG, "connect: 'mqtt start connect ... isConnecting = " + isConnecting);
+        LogUtil.t("connect: 'mqtt start connect ... isConnecting = " + isConnecting);
         if (info == null) {
             return "mqtt info is empty";
         }
@@ -79,7 +79,7 @@ public class Mqtt {
         }
 
         if (isConnecting) {
-            Log.e(TAG, "connect: '---------- is doing return");
+            LogUtil.t("connect: '---------- is doing return");
             totalConnectingReturn += 1;
             if (totalConnectingReturn >= 6) {
                 totalConnectingReturn = 0;
@@ -107,7 +107,6 @@ public class Mqtt {
             isConnecting = true;
 
             mClient.connect(options, null, mIMqttActionListener);
-            Log.e(TAG, "connect: 'mqtt connect func end ...");
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
@@ -119,14 +118,14 @@ public class Mqtt {
     private final IMqttActionListener mIMqttActionListener = new IMqttActionListener() {
         @Override
         public void onSuccess(IMqttToken asyncActionToken) {
-            Log.e(TAG, "connect: '----> connect success");
+            LogUtil.t("connect: '----> connect success");
             isConnecting = false;
             totalConnectingReturn = 0;
         }
 
         @Override
         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-            Log.e(TAG, "onFailure: '----- mqtt connect fail " + exception.toString() );
+            LogUtil.t("onFailure: '----- mqtt connect fail " + exception.toString());
             isConnecting = false;
             totalConnectingReturn = 0;
             if (mIMqttEventListener != null) {

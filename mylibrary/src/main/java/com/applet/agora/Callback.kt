@@ -7,7 +7,6 @@ import kotlin.math.abs
 
 abstract class Callback {
   fun code(code: Int?, runnable: ((Int?) -> Any?)? = null) {
-    Log.e("papapap", "code: = " + code)
     if (code == null || code < 0) {
       val newCode = abs(code ?: Constants.ERR_NOT_INITIALIZED)
       failure(newCode.toString(), RtcEngine.getErrorDescription(newCode))

@@ -3,7 +3,6 @@ package com.applet.db;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +57,6 @@ public class DBSQLiteDatabase {
         if (enableWriteAheadLogging) {
             mDB.enableWriteAheadLogging();
         }
-        Log.e(TAG, "open: 'db open");
     }
 
     public boolean isOpen() {
@@ -70,7 +68,6 @@ public class DBSQLiteDatabase {
         if (mDB == null) return;
         mDB.close();
         mDB = null;
-        Log.e(TAG, "close: 'db close");
     }
 
     public synchronized com.alibaba.fastjson.JSONArray selectSql(String sql) throws DBCustomException {

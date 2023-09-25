@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieComposition;
@@ -28,8 +27,6 @@ import io.dcloud.feature.uniapp.ui.component.UniComponent;
 import io.dcloud.feature.uniapp.ui.component.UniComponentProp;
 
 public class NavViewLottie extends UniComponent<LottieAnimationView> {
-
-    private static final String TAG = "NavAnimLottieView";
 
     private boolean isAutoPlay;
     private int mRepeatMode;
@@ -74,7 +71,6 @@ public class NavViewLottie extends UniComponent<LottieAnimationView> {
         mInitSpeed = params.containsKey("speed") ? params.getFloatValue("speed") : 1;
         mSrc = params.getString("src");
 
-        Log.e(TAG, "setParams: '----> " + params );
         if (TextUtils.isEmpty(mSrc)) return;
 
         if (mLoops == -1) {

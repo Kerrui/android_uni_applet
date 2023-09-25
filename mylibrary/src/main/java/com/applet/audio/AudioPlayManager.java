@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.applet.feature.LibApp;
 import com.applet.library.R;
@@ -202,13 +201,11 @@ public class AudioPlayManager {
 
     public void registerHeadsetReceiver(Activity activity) {
         if (mHeadsetReceiver != null) return;
-        Log.e(TAG, "registerHeadsetReceiver: '-----> start");
         mHeadsetReceiver = new HeadsetReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED);
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         activity.registerReceiver(mHeadsetReceiver, filter);
-        Log.e(TAG, "registerHeadsetReceiver: '-----> end");
     }
 
     public void unregisterHeadsetReceiver(Context context) {
@@ -226,7 +223,6 @@ public class AudioPlayManager {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            Log.e(TAG, "action = " + action);
             if (TextUtils.isEmpty(action)) {
                 return;
             }
@@ -236,7 +232,6 @@ public class AudioPlayManager {
                     BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
                     @SuppressLint("MissingPermission") int status1 = adapter.getProfileConnectionState(BluetoothProfile.HEADSET);
                     if (status1 == BluetoothProfile.STATE_CONNECTED) {
-                        Log.e(TAG, "onReceive: '------> 蓝牙耳机已连接");
                         changeBluetoothMode();
                     }
                     break;

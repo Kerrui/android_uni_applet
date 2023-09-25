@@ -4,15 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.applet.library.IMqttServiceAidlInterface;
 
 import androidx.annotation.Nullable;
 
 public class MqttClientService extends Service {
-
-    private static final String TAG = "MqttClientService";
 
     public static class MyBinder extends IMqttServiceAidlInterface.Stub {
 
@@ -31,7 +28,6 @@ public class MqttClientService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
-        Log.e(TAG, "onStartCommand: '------- action = " + action);
         if (action != null) {
             switch (action) {
                 case Mqtt.MQTT_ACTION_CONNECT:
@@ -48,7 +44,6 @@ public class MqttClientService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.e(TAG, "onDestroy: 'MqttClientService destroy");
         disConnect();
         super.onDestroy();
     }

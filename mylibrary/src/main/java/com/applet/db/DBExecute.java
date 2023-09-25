@@ -1,7 +1,5 @@
 package com.applet.db;
 
-import android.util.Log;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -13,8 +11,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
 
 public class DBExecute {
-
-    private static final String TAG = "DBExecute";
 
     private ExecutorService mExecutorDB;
 
@@ -83,16 +79,12 @@ public class DBExecute {
     }
 
     public void shutdownExecutor() {
-        Log.e(TAG, "shutdownExecutor: start");
         if (mExecutorDB == null) return;
         ThreadPoolExecutor threadPoolExecutor = ((ThreadPoolExecutor) mExecutorDB);
         int queueSize = threadPoolExecutor.getQueue().size();
         if (queueSize <= 0) {
             mExecutorDB.shutdown();
             mExecutorDB = null;
-            Log.e(TAG, "shutdownExecutor: finish");
         }
     }
-
-
 }

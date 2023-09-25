@@ -1,8 +1,8 @@
 package com.applet.feature;
 
-class LibConstant {
+public class LibConstant {
 
-    private static String env = "dev";
+    private static final String env = "dev";
     public static final String SDK_VERSION = "1.0.0";
 
     public static final String SP_DIRECT_OPEN = "sp_direct_open";

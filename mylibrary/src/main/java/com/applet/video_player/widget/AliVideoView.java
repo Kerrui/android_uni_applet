@@ -9,7 +9,6 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
@@ -36,8 +35,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class AliVideoView extends FrameLayout {
-
-    private static final String TAG = "AliVideoView";
 
     private Context mContext;
     private AliPlayer mAliPlayer;
@@ -91,7 +88,6 @@ public class AliVideoView extends FrameLayout {
             width = mAliPlayer.getVideoHeight();
             height = mAliPlayer.getVideoWidth();
         }
-        Log.e(TAG, "setWH: 'asdasda width = " + width + " height = " + height + "  rotateMode " + rotation);
         if (width <= 0 || height <= 0) return;
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics displayMetrics = new DisplayMetrics();

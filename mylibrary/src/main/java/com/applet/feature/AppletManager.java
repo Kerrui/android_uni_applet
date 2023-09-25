@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.applet.feature.bean.WgtInfo;
 import com.applet.feature.util.DownloadUtil;
+import com.applet.feature.util.LogUtil;
 import com.applet.feature.util.MD5;
 import com.applet.feature.util.SPUtils;
 import com.applet.feature.util.Util;
@@ -57,8 +57,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AppletManager {
-
-    private static final String TAG = "AppletManager";
 
     private boolean isDirectOpen = false;
     private boolean isPackageProcess;
@@ -117,7 +115,7 @@ public class AppletManager {
             WXSDKEngine.registerModule("UploadModule", UploadModule.class);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(TAG, "initialize: '初始化小程序 module 报错 ", e);
+            LogUtil.e("initialize: init module error ", e);
         }
 
         DCSDKInitConfig config = new DCSDKInitConfig.Builder()
@@ -127,9 +125,15 @@ public class AppletManager {
         DCUniMPSDK.getInstance().initialize(context, config, new IDCUniMPPreInitCallback() {
             @Override
             public void onInitFinished(boolean b) {
-                Log.e(TAG, "onInitFinished: " + (b ? "success" : "fail"));
-                Log.e(TAG, "onInitFinished: isPackageProcess = " + isPackageProcess);
-                Log.e(TAG, "onInitFinished: isDirectOpen = " + isDirectOpen);
+                LogUtil.t("onInitFinished: isPackageProcess = " + isPackageProcess);
+                if (isPackageProcess) {
+                    if (b) {
+                        LogUtil.d("initialize finish success");
+                    } else {
+                        LogUtil.d("initialize finish failed");
+                    }
+                }
+                LogUtil.t("onInitFinished: isDirectOpen = " + isDirectOpen);
                 if (b && isPackageProcess && isDirectOpen) {
                     openApplet(context);
                 }
@@ -227,7 +231,7 @@ public class AppletManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
-                Log.e(TAG, "onResponse: '----> 1" + result);
+                LogUtil.t("onResponse: '----> 1" + result);
                 call.cancel();
                 handleResponse(context, result);
             }
@@ -254,10 +258,8 @@ public class AppletManager {
 
         if (dataObj.containsKey("wgt")) {
             WgtInfo kefuInfo = dataObj.getObject("wgt", WgtInfo.class);
-            Log.e(TAG, "handleResponse: '-sad-as-dad " + kefuInfo.url );
             boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(kefuInfo.appid)
                     || !kefuInfo.wgt_version.equals(mKefuInfo.wgt_version);
-            Log.e(TAG, "handleResponse: '[][]][[]][][][]][][]] kefu need handle = " + needHandle );
             if (needHandle) handleKefuResponse(kefuInfo, downFilePath);
         }
 
@@ -265,29 +267,28 @@ public class AppletManager {
             WgtInfo appletInfo = dataObj.getObject("wgt2", WgtInfo.class);
             boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(appletInfo.appid)
                     || !appletInfo.wgt_version.equals(mAppletInfo.wgt_version);
-            Log.e(TAG, "handleResponse: '[][]][[]][][][]][][]] applet need handle = " + needHandle );
             if (needHandle) handleAppletResponse(context, appletInfo, downFilePath);
         }
     }
 
     private void handleKefuResponse(WgtInfo kefuInfo, String downFilePath) {
-        Log.e(TAG, "handleResponse: '开始下载 wgt 客服");
+        LogUtil.t("handleResponse kefu: start wgt l...");
         String fileName = kefuInfo.appid + ".wgt";
         DownloadUtil.getInstance().download(kefuInfo.url, downFilePath, fileName, new DownloadUtil.OnDownloadListener() {
             @Override
             public void onSuccess(File file) {
-                Log.e(TAG, "onSuccess: '====== kefu wgt download success" + file);
+                LogUtil.t("handleResponse kefu l success " + file);
                 UniManager.releaseWgtToRunPath(file.getPath(), kefuInfo.appid, new UniManager.IOnWgtReleaseListener() {
                     @Override
                     public void onSuccess() {
-                        Log.e(TAG, "onSuccess: '-------- wgt 释放成功 .... ");
+                        LogUtil.t("handleResponse kefu release success");
                         SPUtils.getInstance().put(LibConstant.SP_WGT_KE_FU, JSON.toJSONString(kefuInfo));
                         mKefuInfo = kefuInfo;
                     }
 
                     @Override
                     public void onFailed(String message) {
-
+                        LogUtil.t("handleResponse kefu release failed " + message);
                     }
                 });
             }
@@ -298,21 +299,22 @@ public class AppletManager {
 
             @Override
             public void onFailed(String message) {
-                Log.e(TAG, "onFailed: '====== kefu wgt download failed " + message);
+                LogUtil.t("handleResponse kefu l failed " + message);
             }
         });
     }
 
     private void handleAppletResponse(Context context, WgtInfo appletInfo, String downFilePath) {
+        LogUtil.t("handleResponse applet: start wgt l...");
         String fileName = appletInfo.appid + ".wgt";
         DownloadUtil.getInstance().download(appletInfo.url, downFilePath, fileName, new DownloadUtil.OnDownloadListener() {
             @Override
             public void onSuccess(File file) {
-                Log.e(TAG, "onSuccess: '-------> 00000000000 applet wgt download success");
+                LogUtil.t("handleResponse applet: l success");
                 UniManager.releaseWgtToRunPath(file.getPath(), appletInfo.appid, new UniManager.IOnWgtReleaseListener() {
                     @Override
                     public void onSuccess() {
-                        Log.e(TAG, "onSuccess: '-------- wgt 释放成功 .... ");
+                        LogUtil.t("handleResponse applet: release success");
                         SPUtils.getInstance().put(LibConstant.SP_WGT_APPLET, JSON.toJSONString(appletInfo));
                         mAppletInfo = appletInfo;
                         if (isDirectOpen) openApplet(context);
@@ -320,7 +322,7 @@ public class AppletManager {
 
                     @Override
                     public void onFailed(String message) {
-
+                        LogUtil.t("handleResponse applet: release failed " + message);
                     }
                 });
             }
@@ -332,7 +334,7 @@ public class AppletManager {
 
             @Override
             public void onFailed(String message) {
-
+                LogUtil.t("handleResponse applet: l failed " + message);
             }
         });
     }

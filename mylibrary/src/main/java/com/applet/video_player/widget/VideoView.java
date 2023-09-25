@@ -6,7 +6,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -17,11 +16,12 @@ import android.widget.TextView;
 
 import com.aliyun.player.IPlayer;
 import com.aliyun.player.nativeclass.CacheConfig;
+import com.applet.feature.util.LogUtil;
+import com.applet.library.R;
 import com.applet.video_player.VideoListener;
 import com.applet.video_player.bean.ActionBean;
 import com.applet.video_player.bean.VideoBean;
 import com.applet.video_player.util.TimeFormater;
-import com.applet.library.R;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
@@ -29,7 +29,6 @@ import java.lang.ref.WeakReference;
 
 public class VideoView extends FrameLayout implements SeekBar.OnSeekBarChangeListener {
 
-    private static final String TAG = "VideoView";
     private static final String CACHE_DIR_PATH = ".videoCache" + File.separator;
 
     private static final int WHAT_HIDE = 0;
@@ -134,7 +133,6 @@ public class VideoView extends FrameLayout implements SeekBar.OnSeekBarChangeLis
             @Override
             public void onVideoPrepared() {
                 long duration = video_ali.getDuration();
-                Log.e(TAG, "onVideoPrepared: ----> 播放准备成功 " + duration);
                 sb_seek.setMax((int) duration);
                 tv_total.setText(TimeFormater.formatMs(duration));
                 video_ali.setWH();
@@ -142,21 +140,18 @@ public class VideoView extends FrameLayout implements SeekBar.OnSeekBarChangeLis
 
             @Override
             public void onVideoStart() {
-                Log.e(TAG, "onVideoStart: ----> 视频开始播放");
                 iv_poster.setVisibility(View.GONE);
                 changeAction(true);
             }
 
             @Override
             public void onVideoCompletion() {
-                Log.e(TAG, "onVideoCompletion: ----> 播放完成");
                 video_ali.reset();
                 video_ali.seekTo(0, IPlayer.SeekMode.Accurate);
             }
 
             @Override
             public void onVideoInfo(com.aliyun.player.bean.InfoBean infoBean) {
-                //Log.e(TAG, "onVideoInfo: ----> 视频播放其他事件 " + infoBean.getCode() + "  " + infoBean.getExtraValue());
             }
 
             @Override
@@ -168,14 +163,13 @@ public class VideoView extends FrameLayout implements SeekBar.OnSeekBarChangeLis
 
             @Override
             public void onVideoStateChanged(int newState) {
-                Log.e(TAG, "onVideoStateChanged: ----> 播放器状态改变事件 " + newState);
                 mPlayStatus = newState;
                 changeStatusUi();
             }
 
             @Override
             public void onVideoError(com.aliyun.player.bean.ErrorInfo errorInfo) {
-                Log.e(TAG, "onVideoError: ----> 视频播放出错 " + errorInfo.getCode().getValue());
+                LogUtil.e("on video error " + errorInfo.getCode().getValue() + "  " + errorInfo.getMsg());
             }
         });
 
@@ -253,13 +247,11 @@ public class VideoView extends FrameLayout implements SeekBar.OnSeekBarChangeLis
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (!fromUser) return;
-        Log.e(TAG, "seekBar onProgressChanged: '----> " + progress);
         tv_duration.setText(TimeFormater.formatMs(progress));
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        Log.e(TAG, "seekBar onStartTrackingTouch: '----> " + seekBar.getProgress());
         video_ali.pause();
         if (mHideHandler != null) {
             mHideHandler.removeMessages(WHAT_HIDE);
@@ -268,7 +260,6 @@ public class VideoView extends FrameLayout implements SeekBar.OnSeekBarChangeLis
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        Log.e(TAG, "seekBar onStopTrackingTouch: '----> " + seekBar.getProgress());
         video_ali.seekTo(seekBar.getProgress(), IPlayer.SeekMode.Accurate);
         start();
     }

@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -212,7 +211,6 @@ public class DragCloseHelper {
             return false;
         } else if (dragCloseListener != null && dragCloseListener.intercept()) {
             //被接口中的方法拦截，但是如果设置了点击事件，将继续执行点击逻辑
-            log("action dispatch--->");
             if (clickListener != null) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     isPress = true;
@@ -231,7 +229,6 @@ public class DragCloseHelper {
         } else {
             //不拦截
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                log("action down--->");
                 reset(event);
                 mLastY = event.getY();
                 mLastX = event.getX();
@@ -272,7 +269,6 @@ public class DragCloseHelper {
                     //已经触发或者开始触发，更新view
                     mLastY = currentY;
                     mLastX = currentX;
-                    log("action move---> start close");
 
                     //一旦移动，按则取消
                     resetClickEvent();
@@ -313,7 +309,6 @@ public class DragCloseHelper {
                     return true;
                 }
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                log("action up--->" + isSwipingToClose);
                 if (isInvalidTouch()) {
                     //无效触摸区域，则需要拦截
                     return true;
@@ -474,15 +469,6 @@ public class DragCloseHelper {
             }
         });
         animatorY.setDuration(DURATION).start();
-    }
-
-    /**
-     * 打印日志
-     *
-     * @param msg
-     */
-    private void log(String msg) {
-        Log.e(getClass().getName(), msg);
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.applet.mqtt;
 
-import android.util.Log;
+import com.applet.feature.util.LogUtil;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -8,8 +8,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 class MqttCallBackBus implements MqttCallbackExtended {
-
-    private static final String TAG = "MQTTCallBackBus";
 
     private IMqttEventListener mIMqttEventListener;
 
@@ -29,7 +27,7 @@ class MqttCallBackBus implements MqttCallbackExtended {
             if (cause instanceof MqttException) {
                 MqttException mqttException = (MqttException) cause;
                 if (mqttException.getReasonCode() == MqttException.REASON_CODE_CONNECTION_LOST) {
-                    Log.e(TAG, "connectionLost: QMTT connect lost ...... ");
+                    LogUtil.t("connectionLost: QMTT connect lost ...... ");
                     if (mIMqttEventListener != null) {
                         mIMqttEventListener.onStatusChange(Mqtt.CONNECT_STATUS_LOST);
                     }
@@ -41,7 +39,7 @@ class MqttCallBackBus implements MqttCallbackExtended {
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
         String msg = new String(mqttMessage.getPayload());
-        Log.d(TAG, "receive msg = " + msg);
+        LogUtil.t("mqtt receive msg = " + msg);
         if (mIMqttEventListener != null) {
             mIMqttEventListener.onAction(msg);
         }
@@ -53,7 +51,7 @@ class MqttCallBackBus implements MqttCallbackExtended {
 
     @Override
     public void connectComplete(boolean reconnect, String serverURI) {
-        Log.e(TAG, "connectComplete: mqtt connectComplete  " + reconnect);
+        LogUtil.t("connectComplete: mqtt connectComplete  " + reconnect);
         int status = reconnect ? Mqtt.CONNECT_STATUS_AGAIN : Mqtt.CONNECT_STATUS_SUCCESS;
         if (mIMqttEventListener != null) {
             mIMqttEventListener.onStatusChange(status);
