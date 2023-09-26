@@ -65,7 +65,6 @@ dependencies {
     compileOnly fileTree(dir: '../app/libs', include: [
             'android-gif-drawable-release@1.2.23.aar',
             'breakpad-build-release.aar',
-            'debug-server-release.aar',
             'uniapp-v8-release.aar',
             'uniMPSDK-V2-release.aar',
             'AliyunPlayer-5.5.0.0-full.aar',

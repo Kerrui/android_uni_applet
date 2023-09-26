@@ -1,6 +1,6 @@
 
-<hbuilder debug="true" syncDebug="true">
+<hbuilder debug="false" syncDebug="false">
 <apps>
-    <app appid="__UNI__18DF11F" appver=""/>
+    <app appid="" appver=""/>
 </apps>
 </hbuilder>
