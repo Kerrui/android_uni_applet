@@ -224,6 +224,7 @@ public class AppletManager {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                LogUtil.t("onResponse: '----> fail " + e.getMessage());
             }
 
             @Override
