@@ -32,6 +32,5 @@ public class MainActivity extends AppCompatActivity {
                 AppLibSdk.getInstance().openKFApp(MainActivity.this, "", "",true, true);
             }
         });
-        //String[] PermissionString = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
     }
 }
