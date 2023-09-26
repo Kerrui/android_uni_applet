@@ -13,10 +13,6 @@ import com.applet.feature.util.SPUtils;
 import com.applet.feature.util.Util;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
-import com.applet.module.AgoraRtcChannelModule;
-import com.applet.module.AgoraRtcEngineModule;
-import com.applet.module.AgoraRtcSurfaceView;
-import com.applet.module.AgoraRtcTextureView;
 import com.applet.module.AppletModule;
 import com.applet.module.AudioModule;
 import com.applet.module.DBModule;
@@ -96,10 +92,6 @@ public class AppletManager {
         }
 
         try {
-            WXSDKEngine.registerModule("Agora-RTC-EngineModule", AgoraRtcEngineModule.class);
-            WXSDKEngine.registerModule("Agora-RTC-ChannelModule", AgoraRtcChannelModule.class);
-            WXSDKEngine.registerComponent("Agora-RTC-SurfaceView", AgoraRtcSurfaceView.class);
-            WXSDKEngine.registerComponent("Agora-RTC-TextureView", AgoraRtcTextureView.class);
             WXSDKEngine.registerComponent("nav-anim-lottie", NavViewLottie.class);
             WXSDKEngine.registerComponent("nav-anim-svga", NavViewSVGA.class);
             WXSDKEngine.registerComponent("nav-blur", NavViewBlur.class);
