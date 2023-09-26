@@ -27,7 +27,7 @@ public class MqttClientService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getAction();
+        String action = intent == null ? null : intent.getAction();
         if (action != null) {
             switch (action) {
                 case Mqtt.MQTT_ACTION_CONNECT:

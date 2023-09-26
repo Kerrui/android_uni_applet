@@ -32,3 +32,10 @@
 -keep class org.eclipse.paho.client.mqttv3.**{*;}
 -keep class org.eclipse.paho.client.mqttv3.*$*{*;}
 -keep class org.eclipse.paho.client.mqttv3.logging.JSR47Logger{*;}
+-keep class com.applet.image_browser.view.GPreviewActivity{*;}
+-keep class com.alivc.**{*;}
+-keep class com.aliyun.**{*;}
+-keep class com.cicada.**{*;}
+-dontwarn com.alivc.**
+-dontwarn com.aliyun.**
+-dontwarn com.cicada.**

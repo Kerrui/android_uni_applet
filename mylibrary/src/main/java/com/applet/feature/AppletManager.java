@@ -1,8 +1,6 @@
 package com.applet.feature;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -249,12 +247,7 @@ public class AppletManager {
             SPUtils.getInstance().put(LibConstant.SP_DIRECT_OPEN, isDirectOpen);
         }
 
-        String downFilePath;
-        if (Build.VERSION.SDK_INT > 29) {
-            downFilePath = context.getExternalFilesDir(null).getAbsolutePath();
-        } else {
-            downFilePath = Environment.getExternalStorageDirectory().getPath();
-        }
+        String downFilePath = context.getExternalFilesDir(null).getAbsolutePath();
 
         if (dataObj.containsKey("wgt")) {
             WgtInfo kefuInfo = dataObj.getObject("wgt", WgtInfo.class);
