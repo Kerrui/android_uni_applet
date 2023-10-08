@@ -85,7 +85,7 @@ fun mapToLiveTranscoding(map: Map<*, *>): LiveTranscoding {
     (map["videoFramerate"] as? Number)?.let { videoFramerate = it.toInt() }
     (map["lowLatency"] as? Boolean)?.let { lowLatency = it }
     (map["videoGop"] as? Number)?.let { videoGop = it.toInt() }
-    (map["watermark"] as? Map<*, *>)?.let { watermark = mapToAgoraImage(it) }
+//    (map["watermark"] as? Map<*, *>)?.let { watermark = mapToAgoraImage(it) }
     (map["watermarkList"] as? List<*>)?.let { list ->
       list.forEach { item ->
         (item as? Map<*, *>)?.let {
@@ -93,7 +93,7 @@ fun mapToLiveTranscoding(map: Map<*, *>): LiveTranscoding {
         }
       }
     }
-    (map["backgroundImage"] as? Map<*, *>)?.let { backgroundImage = mapToAgoraImage(it) }
+//    (map["backgroundImage"] as? Map<*, *>)?.let { backgroundImage = mapToAgoraImage(it) }
     (map["backgroundImageList"] as? List<*>)?.let { list ->
       list.forEach { item ->
         (item as? Map<*, *>)?.let {

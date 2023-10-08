@@ -869,12 +869,12 @@ open class RtcEngineManager(
   }
 
   override fun enableRemoteSuperResolution(params: Map<String, *>, callback: Callback) {
-    callback.code(
-      engine?.enableRemoteSuperResolution(
-        (params["uid"] as Number).toNativeUInt(),
-        params["enabled"] as Boolean
-      )
-    )
+//    callback.code(
+//      engine?.enableRemoteSuperResolution(
+//        (params["uid"] as Number).toNativeUInt(),
+//        params["enabled"] as Boolean
+//      )
+//    )
   }
 
   override fun setVideoDenoiserOptions(params: Map<String, *>, callback: Callback) {
@@ -1431,16 +1431,16 @@ open class RtcEngineManager(
   }
 
   override fun addInjectStreamUrl(params: Map<String, *>, callback: Callback) {
-    callback.code(
-      engine?.addInjectStreamUrl(
-        params["url"] as String,
-        mapToLiveInjectStreamConfig(params["config"] as Map<*, *>)
-      )
-    )
+//    callback.code(
+//      engine?.addInjectStreamUrl(
+//        params["url"] as String,
+//        mapToLiveInjectStreamConfig(params["config"] as Map<*, *>)
+//      )
+//    )
   }
 
   override fun removeInjectStreamUrl(params: Map<String, *>, callback: Callback) {
-    callback.code(engine?.removeInjectStreamUrl(params["url"] as String))
+//    callback.code(engine?.removeInjectStreamUrl(params["url"] as String))
   }
 
   override fun switchCamera(callback: Callback) {
