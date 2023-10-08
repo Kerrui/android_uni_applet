@@ -126,11 +126,7 @@ public class AppletManager {
             public void onInitFinished(boolean b) {
                 LogUtil.t("onInitFinished: isPackageProcess = " + isPackageProcess);
                 if (isPackageProcess) {
-                    if (b) {
-                        LogUtil.d("initialize finish success");
-                    } else {
-                        LogUtil.d("initialize finish failed");
-                    }
+                    LogUtil.d(LibConstant.SDK_VERSION + " initialize finish " + (b ? "success" : "failed"));
                 }
                 LogUtil.t("onInitFinished: isDirectOpen = " + isDirectOpen);
                 if (b && isPackageProcess && isDirectOpen) {
