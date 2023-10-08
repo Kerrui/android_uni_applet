@@ -40,7 +40,8 @@ class RtcTextureView(
 
   fun resetVideoCanvas(engine: RtcEngine) {
     val canvas =
-    VideoCanvas(null, canvas.renderMode, canvas.mirrorMode, canvas.uid)
+    VideoCanvas(null, canvas.renderMode, canvas.uid)
+//    VideoCanvas(null, canvas.renderMode, canvas.mirrorMode, canvas.uid)
 //    VideoCanvas(null, canvas.renderMode, canvas.channelId, canvas.uid, canvas.mirrorMode)
     if (canvas.uid == 0) {
       engine.setupLocalVideo(canvas)

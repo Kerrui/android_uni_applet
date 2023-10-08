@@ -3,6 +3,7 @@ package com.applet.agora
 import android.graphics.Rect
 import android.util.Log
 import androidx.annotation.IntRange
+import io.agora.rtc2.ClientRoleOptions
 import io.agora.rtc2.Constants
 import io.agora.rtc2.IMediaExtensionObserver
 import io.agora.rtc2.IRtcEngineEventHandler
@@ -245,21 +246,21 @@ class RtcEngineEventHandler(
     emitter(methodName, hashMapOf("data" to data.toList()))
   }
 
-  override fun onWarning(@Annotations.AgoraWarningCode warn: Int) {
-    callback(RtcEngineEvents.Warning, warn)
-  }
+//  override fun onWarning(@Annotations.AgoraWarningCode warn: Int) {
+//    callback(RtcEngineEvents.Warning, warn)
+//  }
 
   override fun onError(@Annotations.AgoraErrorCode err: Int) {
     callback(RtcEngineEvents.Error, err)
   }
 
-  override fun onApiCallExecuted(
-    @Annotations.AgoraErrorCode error: Int,
-    api: String?,
-    result: String?
-  ) {
-    callback(RtcEngineEvents.ApiCallExecuted, error, api, result)
-  }
+//  override fun onApiCallExecuted(
+//    @Annotations.AgoraErrorCode error: Int,
+//    api: String?,
+//    result: String?
+//  ) {
+//    callback(RtcEngineEvents.ApiCallExecuted, error, api, result)
+//  }
 
   override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
     callback(RtcEngineEvents.JoinChannelSuccess, channel, uid.toUInt().toLong(), elapsed)
@@ -281,12 +282,16 @@ class RtcEngineEventHandler(
     callback(RtcEngineEvents.UserInfoUpdated, uid.toUInt().toLong(), userInfo?.toMap())
   }
 
-  override fun onClientRoleChanged(
-    @Annotations.AgoraClientRole oldRole: Int,
-    @Annotations.AgoraClientRole newRole: Int
-  ) {
-    callback(RtcEngineEvents.ClientRoleChanged, oldRole, newRole)
+  override fun onClientRoleChanged(oldRole: Int, newRole: Int, newRoleOptions: ClientRoleOptions?) {
+    callback(RtcEngineEvents.ClientRoleChanged, oldRole, newRole, newRoleOptions?.audienceLatencyLevel)
   }
+
+//  override fun onClientRoleChanged(
+//    @Annotations.AgoraClientRole oldRole: Int,
+//    @Annotations.AgoraClientRole newRole: Int
+//  ) {
+//    callback(RtcEngineEvents.ClientRoleChanged, oldRole, newRole)
+//  }
 
   override fun onUserJoined(uid: Int, elapsed: Int) {
     callback(RtcEngineEvents.UserJoined, uid.toUInt().toLong(), elapsed)
@@ -340,13 +345,23 @@ class RtcEngineEventHandler(
   }
 
   override fun onVideoSizeChanged(
+    source: Constants.VideoSourceType?,
     uid: Int,
     width: Int,
     height: Int,
     @IntRange(from = 0, to = 360) rotation: Int
   ) {
-    callback(RtcEngineEvents.VideoSizeChanged, uid.toUInt().toLong(), width, height, rotation)
+    callback(RtcEngineEvents.VideoSizeChanged, Constants.VideoSourceType.getValue(source), uid.toUInt().toLong(), width, height, rotation)
   }
+
+//  override fun onVideoSizeChanged(
+//    uid: Int,
+//    width: Int,
+//    height: Int,
+//    @IntRange(from = 0, to = 360) rotation: Int
+//  ) {
+//    callback(RtcEngineEvents.VideoSizeChanged, uid.toUInt().toLong(), width, height, rotation)
+//  }
 
   override fun onRemoteVideoStateChanged(
     uid: Int,

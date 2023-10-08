@@ -312,12 +312,12 @@ class RtcChannelManager(
   }
 
   override fun enableRemoteSuperResolution(params: Map<String, *>, callback: Callback) {
-    callback.code(
-      RtcChannelManager[params["channelId"] as String]?.enableRemoteSuperResolution(
-        (params["uid"] as Number).toNativeUInt(),
-        params["enabled"] as Boolean
-      )
-    )
+//    callback.code(
+//      RtcChannelManager[params["channelId"] as String]?.enableRemoteSuperResolution(
+//        (params["uid"] as Number).toNativeUInt(),
+//        params["enabled"] as Boolean
+//      )
+//    )
   }
 
   override fun setRemoteVoicePosition(params: Map<String, *>, callback: Callback) {
@@ -510,16 +510,16 @@ class RtcChannelManager(
   }
 
   override fun addInjectStreamUrl(params: Map<String, *>, callback: Callback) {
-    callback.code(
-      RtcChannelManager[params["channelId"] as String]?.addInjectStreamUrl(
-        params["url"] as String,
-        mapToLiveInjectStreamConfig(params["config"] as Map<*, *>)
-      )
-    )
+//    callback.code(
+//      RtcChannelManager[params["channelId"] as String]?.addInjectStreamUrl(
+//        params["url"] as String,
+//        mapToLiveInjectStreamConfig(params["config"] as Map<*, *>)
+//      )
+//    )
   }
 
   override fun removeInjectStreamUrl(params: Map<String, *>, callback: Callback) {
-    callback.code(RtcChannelManager[params["channelId"] as String]?.removeInjectStreamUrl(params["url"] as String))
+//    callback.code(RtcChannelManager[params["channelId"] as String]?.removeInjectStreamUrl(params["url"] as String))
   }
 
   override fun createDataStream(params: Map<String, *>, callback: Callback) {
