@@ -19,8 +19,8 @@ public class AppLibSdk {
         return AppLibSdkHolder.sInstance;
     }
 
-    public void initEngine(Context context) {
-        AppletManager.getInstance().initialize(context);
+    public void initEngine(Context context, OnAppLibInitializeListener onAppLibInitializeListener) {
+        AppletManager.getInstance().initialize(context, onAppLibInitializeListener);
     }
 
     public void openKFApp(Context context, String faceUrl, String uid, boolean hasAgora, boolean openPerfect) {
