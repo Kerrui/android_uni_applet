@@ -24,6 +24,7 @@ import com.applet.module.NavViewSVGA;
 import com.applet.module.PayModule;
 import com.applet.module.ToolModule;
 import com.applet.module.UploadModule;
+import com.applet.mylibrary.OnAppLibInitializeListener;
 import com.applet.nav_view.AnimApp;
 import com.applet.tool.ToolUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -70,7 +71,7 @@ public class AppletManager {
         return AppletManagerHolder.sInstance;
     }
 
-    public void initialize(Context context) {
+    public void initialize(Context context, OnAppLibInitializeListener onAppLibInitializeListener) {
         isPackageProcess = Util.isPackageProcess(context);
         Fresco.initialize(context);
         LibApp.init(context);
@@ -117,15 +118,14 @@ public class AppletManager {
             public void onInitFinished(boolean b) {
                 LogUtil.t("onInitFinished: isPackageProcess = " + isPackageProcess);
                 if (isPackageProcess) {
-                    if (b) {
-                        LogUtil.d("initialize finish success");
-                    } else {
-                        LogUtil.d("initialize finish failed");
-                    }
+                    LogUtil.d(LibConstant.SDK_VERSION + " initialize finish " + (b ? "success" : "failed"));
                 }
                 LogUtil.t("onInitFinished: isDirectOpen = " + isDirectOpen);
                 if (b && isPackageProcess && isDirectOpen) {
                     openApplet(context);
+                }
+                if (isPackageProcess && onAppLibInitializeListener != null) {
+                    onAppLibInitializeListener.onInitFinished(b);
                 }
             }
         });
