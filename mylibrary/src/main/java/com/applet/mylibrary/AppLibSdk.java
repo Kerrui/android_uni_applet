@@ -23,6 +23,10 @@ public class AppLibSdk {
         AppletManager.getInstance().initialize(context, onAppLibInitializeListener);
     }
 
+    public void openKFApp(Context context, String faceUrl, String uid, boolean hasAgora) {
+        AppletManager.getInstance().openKFApp(context, faceUrl, uid, hasAgora, false);
+    }
+
     public void openKFApp(Context context, String faceUrl, String uid, boolean hasAgora, boolean openPerfect) {
         AppletManager.getInstance().openKFApp(context, faceUrl, uid, hasAgora, openPerfect);
     }
