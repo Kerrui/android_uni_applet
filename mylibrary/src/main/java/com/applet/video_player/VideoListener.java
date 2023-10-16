@@ -4,7 +4,7 @@ import com.aliyun.player.bean.ErrorInfo;
 import com.aliyun.player.bean.InfoBean;
 
 /**
- * Created by Genda on 2020/9/9.
+ * Created by Alien-super on 2023/9/9.
  */
 public interface VideoListener {
     int EVENT_START = 1;        // 开始播放
