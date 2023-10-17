@@ -6,6 +6,7 @@ import com.applet.feature.AppletManager;
 
 /**
  * Created by Alien-super on 2023/9/21.
+ * Contact information WeChat: Alien_super
  */
 public class AppLibSdk {
 
