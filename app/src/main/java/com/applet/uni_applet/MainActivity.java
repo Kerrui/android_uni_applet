@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 if (event.equals("applet_event_open_customer_service")) {
                     String faceUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-r3Y_vyQLZ55F8hCsS65hQXKRoKcOqYrgw&usqp=CAU";
                     String uid = "1244522";
-                    AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, true, false);
+                    AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, true);
                 }
             }
         });
@@ -40,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String faceUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-r3Y_vyQLZ55F8hCsS65hQXKRoKcOqYrgw&usqp=CAU";
                 String uid = "1244522";
-                AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, true, false);
+                AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, true);
             }
         });
 
         findViewById(R.id.btn_applet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppLibSdk.getInstance().openKFApp(MainActivity.this, "", "",true, true);
+                AppLibSdk.getInstance().openKFApp(MainActivity.this, "", "",true);
             }
         });
 
