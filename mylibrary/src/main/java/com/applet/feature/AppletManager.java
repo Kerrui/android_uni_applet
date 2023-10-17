@@ -143,10 +143,8 @@ public class AppletManager {
         initAppletSource(context);
     }
 
-    public void openKFApp(Context context, String faceUrl, String uid,  boolean hasAgora, boolean openPerfect) {
-        if (openPerfect) {
-            openApplet(context);
-        } else {
+    public void openKFApp(Context context, String faceUrl, String uid,  boolean hasAgora) {
+        if (!openApplet(context)) {
             openCustomerService(context, faceUrl, uid, hasAgora);
         }
     }
@@ -171,15 +169,16 @@ public class AppletManager {
         }
     }
 
-    private void openApplet(Context context) {
-        if (TextUtils.isEmpty(mAppletInfo.appid)) return;
-        if (!DCUniMPSDK.getInstance().isExistsApp(mAppletInfo.appid)) return;
-        if (mAppletMP != null && mAppletMP.isRuning()) return;
+    private boolean openApplet(Context context) {
+        if (TextUtils.isEmpty(mAppletInfo.appid)) return false;
+        if (!DCUniMPSDK.getInstance().isExistsApp(mAppletInfo.appid)) return false;
+        if (mAppletMP != null && mAppletMP.isRuning()) return false;
         try {
             mAppletMP = DCUniMPSDK.getInstance().openUniMP(context, mAppletInfo.appid);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     private void initAppletSource(Context context) {
