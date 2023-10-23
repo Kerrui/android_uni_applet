@@ -6,12 +6,26 @@ import android.view.WindowManager;
 import com.alibaba.fastjson.JSONObject;
 import com.applet.tool.PermissionManager;
 import com.applet.tool.ToolUtils;
+import com.applet.tool.location.LocationManager;
+import com.applet.tool.location.LocationObj;
+import com.applet.tool.location.OnLocationListener;
 
 import io.dcloud.feature.uniapp.annotation.UniJSMethod;
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
 import io.dcloud.feature.uniapp.common.UniModule;
 
 public class ToolModule extends UniModule {
+
+    @UniJSMethod(uiThread = true)
+    public void getCurrentLocation(JSONObject params, UniJSCallback callback) {
+        int priority = params.containsKey("priority") ? params.getInteger("priority") : -1;
+        LocationManager.getInstance().getCurrentLocation(mUniSDKInstance.getContext(), priority, new OnLocationListener() {
+            @Override
+            public void onLocation(LocationObj locationObj) {
+                callback.invoke(locationObj);
+            }
+        });
+    }
 
     @UniJSMethod(uiThread = false)
     public String deviceID() {
