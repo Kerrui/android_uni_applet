@@ -60,6 +60,7 @@ dependencies {
     compileOnly 'com.airbnb.android:lottie:5.2.0'
     compileOnly 'com.github.yyued:SVGAPlayer-Android:2.6.1'
     compileOnly 'com.android.billingclient:billing:6.0.0'
+    compileOnly 'com.google.android.gms:play-services-location:21.0.1'
 
     compileOnly fileTree(dir: '../app/libs', include: [
             'android-gif-drawable-release@1.2.23.aar',
