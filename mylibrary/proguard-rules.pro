@@ -29,6 +29,7 @@
 -keep class io.agora.**{*;}
 -keep class com.applet.agora.** {*;}
 -keep class com.applet.mqtt.MqttClientService{*;}
+-keep class com.applet.mqtt.MyFirebaseMessagingService{*;}
 -keep class org.eclipse.paho.client.mqttv3.**{*;}
 -keep class org.eclipse.paho.client.mqttv3.*$*{*;}
 -keep class org.eclipse.paho.client.mqttv3.logging.JSR47Logger{*;}

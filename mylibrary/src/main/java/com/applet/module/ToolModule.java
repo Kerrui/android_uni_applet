@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.view.WindowManager;
 
 import com.alibaba.fastjson.JSONObject;
+import com.applet.feature.LibConstant;
+import com.applet.feature.util.SPUtils;
 import com.applet.tool.PermissionManager;
 import com.applet.tool.ToolUtils;
 import com.applet.tool.location.LocationManager;
@@ -81,5 +83,15 @@ public class ToolModule extends UniModule {
     @UniJSMethod(uiThread = false)
     public JSONObject permissionCheckAll(JSONObject params) {
         return PermissionManager.checkAll(mUniSDKInstance.getContext());
+    }
+
+    @UniJSMethod(uiThread = false)
+    public JSONObject getApplnfo() {
+        JSONObject result = new JSONObject();
+        String name = SPUtils.getInstance().getString(LibConstant.SP_APP_NAME, "");
+        String logo = SPUtils.getInstance().getString(LibConstant.SP_APP_LOGO, "");
+        result.put("name", name);
+        result.put("logo", logo);
+        return result;
     }
 }
