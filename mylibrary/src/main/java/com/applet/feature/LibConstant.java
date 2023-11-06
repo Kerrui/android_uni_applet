@@ -10,6 +10,10 @@ public class LibConstant {
 
     public static final String SP_WGT_APPLET = "sp_wgt_applet";
 
+    public static final String SP_APP_NAME = "sp_pro_app_name";
+
+    public static final String SP_APP_LOGO = "sp_pro_app_logo";
+
     public static String getHost() {
         if (isDev()) return "https://bts.267girl.com";
         return "https://service.nbcustomchat.com";

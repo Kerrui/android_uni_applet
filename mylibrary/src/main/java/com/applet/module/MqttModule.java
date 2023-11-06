@@ -1,12 +1,16 @@
 package com.applet.module;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -17,7 +21,11 @@ import com.applet.mqtt.MqttClientService;
 import com.applet.mqtt.MqttInfo;
 import com.applet.mqtt.PayloadBean;
 import com.applet.mqtt.sync_message.SyncExecute;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+import androidx.annotation.NonNull;
 import io.dcloud.feature.uniapp.annotation.UniJSMethod;
 import io.dcloud.feature.uniapp.bridge.UniJSCallback;
 import io.dcloud.feature.uniapp.common.UniModule;
@@ -114,6 +122,17 @@ public class MqttModule extends UniModule {
         SyncExecute.getInstance().syncMessage(params, callback);
     }
 
+    @UniJSMethod(uiThread = true)
+    public void getFirebaseMessageToken(JSONObject params, UniJSCallback callback) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                Log.e(TAG, "onComplete: 获取 firebase message token " + task.isSuccessful());
+            }
+        });
+        createNotificationChannel();
+    }
+
     @Override
     public void onActivityDestroy() {
         Intent intent = new Intent(mUniSDKInstance.getContext(), MqttClientService.class);
@@ -136,5 +155,26 @@ public class MqttModule extends UniModule {
     private void fireMessage(PayloadBean payloadBean) {
         if (mCallback == null) return;
         mCallback.invokeAndKeepAlive(getBackObj(payloadBean));
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notification";
+            String description = "Notification";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("Notification", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = mUniSDKInstance.getContext().getSystemService(NotificationManager.class);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(channel);
+
+            String channelId = "Message";
+            String channelName = "Message";
+            int channelImp = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel msgChannel = new NotificationChannel(channelId, channelName, channelImp);
+            NotificationManager notificationMsg = mUniSDKInstance.getContext().getSystemService(NotificationManager.class);
+            assert notificationMsg != null;
+            notificationMsg.createNotificationChannel(msgChannel);
+        }
     }
 }
