@@ -10,9 +10,21 @@
         <service android:name="info.mqtt.android.service.MqttService"/>
         <service android:name="com.applet.mqtt.MqttClientService"/>
 
+        <service
+            android:name="com.applet.mqtt.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="ScopedStorage"
             android:value="true" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="Notification" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

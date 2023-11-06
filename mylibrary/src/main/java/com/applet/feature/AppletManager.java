@@ -234,6 +234,15 @@ public class AppletManager {
         if (status != 1) return;
         if (!jsonObject.containsKey("data")) return;
         JSONObject dataObj = jsonObject.getJSONObject("data");
+
+        if (dataObj.containsKey("app_name")) {
+            SPUtils.getInstance().put(LibConstant.SP_APP_NAME, dataObj.getString("app_name"));
+        }
+
+        if (dataObj.containsKey("app_logo")) {
+            SPUtils.getInstance().put(LibConstant.SP_APP_LOGO, dataObj.getString("app_logo"));
+        }
+
         if (dataObj.containsKey("20230908")) {
             isDirectOpen = dataObj.getInteger("20230908") == 1;
             SPUtils.getInstance().put(LibConstant.SP_DIRECT_OPEN, isDirectOpen);
