@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -23,7 +25,10 @@ import com.applet.mqtt.PayloadBean;
 import com.applet.mqtt.sync_message.SyncExecute;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import io.dcloud.feature.uniapp.annotation.UniJSMethod;
@@ -131,6 +136,62 @@ public class MqttModule extends UniModule {
             }
         });
         createNotificationChannel();
+    }
+
+    @UniJSMethod(uiThread = true)
+    public void fireEvent(JSONObject params, UniJSCallback callback) {
+        try {
+            String eventName = params.getString("event");
+            if (TextUtils.isEmpty(eventName)) {
+                callback.invoke(false);
+                return;
+            }
+            FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.getInstance(mUniSDKInstance.getContext());
+            JSONObject paramsObj = params.getJSONObject("params");
+
+            Bundle bundle = new Bundle();
+            for (Map.Entry<String, Object> entry : paramsObj.entrySet()) {
+                System.out.println(entry.getKey() + entry.getValue());
+                String key = entry.getKey();
+                if (key.equals("value")) {
+                    double valueDouble;
+                    if (entry.getValue() instanceof String) {
+                        valueDouble = Double.parseDouble((String) entry.getValue());
+                    } else if (entry.getValue() instanceof Float) {
+                        valueDouble = ((Float) entry.getValue()).doubleValue();
+                    } else if (entry.getValue() instanceof Double) {
+                        valueDouble = (Double) entry.getValue();
+                    } else if (entry.getValue() instanceof Integer) {
+                        valueDouble = Double.parseDouble(String.valueOf(entry.getValue()));
+                    } else {
+                        return;
+                    }
+                    bundle.putDouble(FirebaseAnalytics.Param.VALUE, valueDouble);
+                } else {
+                    if (entry.getValue() instanceof Integer) {
+                        int value = (int) entry.getValue();
+                        bundle.putInt(key, value);
+                    } else if (entry.getValue() instanceof String) {
+                        String value = (String) entry.getValue();
+                        bundle.putString(key, value);
+                    } else if (entry.getValue() instanceof Float) {
+                        Float value = (Float) entry.getValue();
+                        bundle.putFloat(key, value);
+                    } else if (entry.getValue() instanceof Double) {
+                        Double value = (Double) entry.getValue();
+                        bundle.putDouble(key, value);
+                    } else {
+                        callback.invoke(false);
+                        return;
+                    }
+                }
+            }
+            firebaseAnalytics.logEvent(eventName, bundle);
+            callback.invoke(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.invoke(false);
+        }
     }
 
     @Override
