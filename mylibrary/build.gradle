@@ -65,6 +65,10 @@ dependencies {
     compileOnly platform('com.google.firebase:firebase-bom:31.1.0')
     compileOnly 'com.google.firebase:firebase-analytics'
     compileOnly 'com.google.firebase:firebase-messaging'
+    compileOnly 'com.adjust.sdk:adjust-android:4.33.5'
+    compileOnly 'com.android.installreferrer:installreferrer:2.2'
+    compileOnly 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    compileOnly 'com.google.android.gms:play-services-appset:16.0.2'
 
     compileOnly fileTree(dir: '../app/libs', include: [
             'android-gif-drawable-release@1.2.23.aar',

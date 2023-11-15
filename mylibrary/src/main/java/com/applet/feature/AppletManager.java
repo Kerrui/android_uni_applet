@@ -13,6 +13,7 @@ import com.applet.feature.util.SPUtils;
 import com.applet.feature.util.Util;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
+import com.applet.module.AdjustModule;
 import com.applet.module.AgoraRtcChannelModule;
 import com.applet.module.AgoraRtcEngineModule;
 import com.applet.module.AgoraRtcSurfaceView;
@@ -112,6 +113,7 @@ public class AppletManager {
             WXSDKEngine.registerModule("PayModule", PayModule.class);
             WXSDKEngine.registerModule("ToolModule", ToolModule.class);
             WXSDKEngine.registerModule("UploadModule", UploadModule.class);
+            WXSDKEngine.registerModule("AdjustModule", AdjustModule.class);
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e("initialize: init module error ", e);
