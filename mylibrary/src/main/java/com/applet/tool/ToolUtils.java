@@ -1,5 +1,6 @@
 package com.applet.tool;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
@@ -14,6 +15,7 @@ import com.applet.tool.virtual.VirtualApkCheckUtil;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
 
 public class ToolUtils {
@@ -124,5 +126,17 @@ public class ToolUtils {
         System.arraycopy(a, 0, c, 0, a.length);
         System.arraycopy(b, 0, c, a.length, b.length);
         return c;
+    }
+
+    public static void killAllProcess(Context context) {
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> mList = mActivityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : mList) {
+            if (runningAppProcessInfo.pid != android.os.Process.myPid()) {
+                android.os.Process.killProcess(runningAppProcessInfo.pid);
+            }
+        }
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0);
     }
 }

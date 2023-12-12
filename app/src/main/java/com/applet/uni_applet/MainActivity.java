@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.applet.feature.util.LogUtil;
 import com.applet.mylibrary.AppLibSdk;
+import com.applet.mylibrary.OnAppLibInitializeListener;
 import com.example.uni_applet.R;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,19 +36,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.btn_toast).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_init).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String faceUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-r3Y_vyQLZ55F8hCsS65hQXKRoKcOqYrgw&usqp=CAU";
-                String uid = "1244522";
-                AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, true);
+                AppLibSdk.getInstance().initEngine(MainActivity.this, new OnAppLibInitializeListener() {
+                    @Override
+                    public void onInitFinished(boolean success) {
+                        LogUtil.t("app lib applet init finish " + success);
+                    }
+                });
             }
         });
 
         findViewById(R.id.btn_applet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppLibSdk.getInstance().openKFApp(MainActivity.this, "", "",true);
+                String faceUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-r3Y_vyQLZ55F8hCsS65hQXKRoKcOqYrgw&usqp=CAU";
+                String uid = "1244522";
+                AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid,false);
             }
         });
 

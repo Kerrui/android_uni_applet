@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -132,7 +131,15 @@ public class MqttModule extends UniModule {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                Log.e(TAG, "onComplete: 获取 firebase message token " + task.isSuccessful());
+                if (!task.isSuccessful()) {
+                    LogUtil.e("Fetching FCM registration token failed ", task.getException());
+                    callback.invokeAndKeepAlive("");
+                    return;
+                }
+
+                String token = task.getResult();
+                LogUtil.t("getFirebaseMessageToken result = " + token);
+                callback.invokeAndKeepAlive(token);
             }
         });
         createNotificationChannel();

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.applet.feature.LibConstant;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -75,15 +78,16 @@ public class Util {
         return Integer.toHexString(str.charAt(i)).toUpperCase();
     }
 
-    public static String getK(Context context,String sha1,  String deviceId) {
+    public static String getK(Context context, String deviceId) {
         StringBuffer result = new StringBuffer("");
         result.append(getRandomStringArray(10));
-        String str = context.getPackageName() + sha1 + deviceId;
+        String str = context.getPackageName() + deviceId;
         String strMD5 = MD5.encrypt(str, true);
         result.append(strMD5.substring(strMD5.length() - 8, strMD5.length()));
         result.append(MD5.encrypt(getRandomStringArray(8), true));
         result.append(",");
         result.append(String.valueOf(System.currentTimeMillis() / 1000));
+        Log.e("TAG", "getK: '[[[[[[[[[[[[[[[ " + result.toString());
         return result.toString();
     }
 
@@ -114,5 +118,9 @@ public class Util {
             }
         }
         return processName;
+    }
+
+    public static String obtainYu() {
+        return MD5.encrypt(LibConstant.SPLIT_LINE_BOUNDARY.replace("a", "k"), true);
     }
 }

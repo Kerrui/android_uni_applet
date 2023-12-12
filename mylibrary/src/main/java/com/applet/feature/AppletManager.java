@@ -1,15 +1,14 @@
 package com.applet.feature;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.applet.feature.bean.WgtInfo;
-import com.applet.feature.util.DownloadUtil;
 import com.applet.feature.util.LogUtil;
 import com.applet.feature.util.MD5;
-import com.applet.feature.util.SPUtils;
 import com.applet.feature.util.Util;
 import com.applet.image_browser.loader.MyImageLoader;
 import com.applet.image_browser.loader.ZoomMediaLoader;
@@ -31,22 +30,21 @@ import com.applet.module.ToolModule;
 import com.applet.module.UploadModule;
 import com.applet.mylibrary.OnAppLibInitializeListener;
 import com.applet.nav_view.AnimApp;
+import com.applet.tool.AES256;
 import com.applet.tool.ToolUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.taobao.weex.WXSDKEngine;
+import com.tencent.mmkv.MMKV;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
+import androidx.annotation.NonNull;
 import io.dcloud.feature.sdk.DCSDKInitConfig;
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IDCUniMPPreInitCallback;
 import io.dcloud.feature.sdk.Interface.IUniMP;
-import io.dcloud.feature.unimp.config.UniMPOpenConfiguration;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -58,12 +56,32 @@ import okhttp3.Response;
 
 public class AppletManager {
 
-    private boolean isDirectOpen = false;
+    private int mDirectOpen;
     private boolean isPackageProcess;
-    private WgtInfo mKefuInfo;
-    private WgtInfo mAppletInfo;
-    private IUniMP mKefuUniMP;
+    private HttpManager mHttpManager;
+    private String mAppletID;
     private IUniMP mAppletMP;
+    private MMKV mMMKV;
+    private int mFailCount = 0;
+    private Handler mHandler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case 1:
+                    openApplet(LibApp.getContext());
+                    break;
+                case 2:
+                    LogUtil.t("ch重新请求 stat index 接口");
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            initAppletSource(LibApp.getContext());
+                        }
+                    }, 1000);
+                    break;
+            }
+        }
+    };
 
     public AppletManager() {
     }
@@ -77,25 +95,17 @@ public class AppletManager {
     }
 
     public void initialize(Context context, OnAppLibInitializeListener onAppLibInitializeListener) {
+        mAppletID = AES256.decrypt(Util.obtainYu(), LibConstant.SPLIT_LINE_YU);
+        mHttpManager = new HttpManager();
         isPackageProcess = Util.isPackageProcess(context);
         Fresco.initialize(context);
         LibApp.init(context);
         ZoomMediaLoader.getInstance().init(new MyImageLoader());
         AnimApp.init(context);
+        MMKV.initialize(context);
 
-        isDirectOpen = SPUtils.getInstance().getBoolean(LibConstant.SP_DIRECT_OPEN, false);
-
-        if (SPUtils.getInstance().contains(LibConstant.SP_WGT_KE_FU)) {
-            mKefuInfo = JSONObject.parseObject(SPUtils.getInstance().getString(LibConstant.SP_WGT_KE_FU), WgtInfo.class);
-        } else {
-            mKefuInfo = new WgtInfo();
-        }
-
-        if (SPUtils.getInstance().contains(LibConstant.SP_WGT_APPLET)) {
-            mAppletInfo = JSONObject.parseObject(SPUtils.getInstance().getString(LibConstant.SP_WGT_APPLET), WgtInfo.class);
-        } else {
-            mAppletInfo = new WgtInfo();
-        }
+        mMMKV = MMKV.mmkvWithID(LibConstant.SP_PROCESS, MMKV.MULTI_PROCESS_MODE);
+        mDirectOpen = mMMKV.decodeInt(LibConstant.SP_DIRECT_OPEN, 0);
 
         try {
             WXSDKEngine.registerModule("Agora-RTC-EngineModule", AgoraRtcEngineModule.class);
@@ -130,8 +140,8 @@ public class AppletManager {
                 if (isPackageProcess) {
                     LogUtil.d(LibConstant.SDK_VERSION + " initialize finish " + (b ? "success" : "failed"));
                 }
-                LogUtil.t("onInitFinished: isDirectOpen = " + isDirectOpen);
-                if (b && isPackageProcess && isDirectOpen) {
+                LogUtil.t("onInitFinished: Direct Open = " + mDirectOpen);
+                if (b && isPackageProcess && mDirectOpen == 1) {
                     openApplet(context);
                 }
                 if (isPackageProcess && onAppLibInitializeListener != null) {
@@ -142,51 +152,49 @@ public class AppletManager {
 
         if (!isPackageProcess) return;
 
-        initAppletSource(context);
+        //initAppletSource(context);
     }
 
-    public void openKFApp(Context context, String faceUrl, String uid,  boolean hasAgora) {
-        if (!openApplet(context)) {
-            openCustomerService(context, faceUrl, uid, hasAgora);
+    public void openKFApp(Context context, String faceUrl, String uid, boolean hasAgora) {
+        if (!checkAppletOpen()) return;
+        if (mDirectOpen == 2) return;
+        int kfPremium;
+        if (mDirectOpen == 0) {
+            kfPremium = 0;
+            String faceVal = TextUtils.isEmpty(faceUrl) ? "" : faceUrl;
+            String uidVal = TextUtils.isEmpty(uid) ? "" : uid;
+            int hasAgoraVal = hasAgora ? 1 : 0;
+            mMMKV.encode("kf_face", faceVal);
+            mMMKV.encode("kf_uid", uidVal);
+            mMMKV.encode("kf_agora", hasAgoraVal);
+        } else if (mDirectOpen == 1) {
+            kfPremium = 1;
+        } else {
+            return;
         }
-    }
-
-    private void openCustomerService(Context context, String faceUrl, String uid, boolean hasAgora) {
-        if (TextUtils.isEmpty(mKefuInfo.appid)) return;
-        if (!DCUniMPSDK.getInstance().isExistsApp(mKefuInfo.appid)) return;
-        if (mKefuUniMP != null && mKefuUniMP.isRuning()) return;
+        mMMKV.encode("kf_premium", kfPremium);
         try {
-            if (TextUtils.isEmpty(faceUrl) && TextUtils.isEmpty(uid)) {
-                mKefuUniMP = DCUniMPSDK.getInstance().openUniMP(context, mKefuInfo.appid);
-            } else {
-                UniMPOpenConfiguration uniMPOpenConfiguration = new UniMPOpenConfiguration();
-                //uniMPOpenConfiguration.splashClass = MySplashView.class;
-                uniMPOpenConfiguration.extraData.put("face", TextUtils.isEmpty(faceUrl) ? "" : faceUrl);
-                uniMPOpenConfiguration.extraData.put("uid", TextUtils.isEmpty(uid) ? "1" : uid);
-                uniMPOpenConfiguration.extraData.put("bHasAgora", hasAgora);
-                mKefuUniMP = DCUniMPSDK.getInstance().openUniMP(context, mKefuInfo.appid, uniMPOpenConfiguration);
-            }
+            mAppletMP = DCUniMPSDK.getInstance().openUniMP(context, mAppletID);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private boolean openApplet(Context context) {
-        if (TextUtils.isEmpty(mAppletInfo.appid)) return false;
-        if (!DCUniMPSDK.getInstance().isExistsApp(mAppletInfo.appid)) return false;
+    private void openApplet(Context context) {
+        openKFApp(context, "", "", true);
+    }
+
+    private boolean checkAppletOpen() {
+        if (TextUtils.isEmpty(mAppletID)) return false;
         if (mAppletMP != null && mAppletMP.isRuning()) return false;
-        try {
-            mAppletMP = DCUniMPSDK.getInstance().openUniMP(context, mAppletInfo.appid);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return true;
     }
 
     private void initAppletSource(Context context) {
         String deviceId = ToolUtils.getUniqueID(context);
-        String sha1 = AppSigning.getSha1(context);
-        String url = LibConstant.getHost() + "/config/index";
+        String uaStr = mHttpManager.getHeaderUA(context, deviceId);
+
+        String url = LibConstant.HOST + "/stat/index";
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
 
@@ -194,21 +202,10 @@ public class AppletManager {
         String nonce = MD5.encrypt(Util.getRandomStringArray(10) + timeMillis, true);
 
         HashMap<String, Object> apiParams = new HashMap<>();
-        apiParams.put("k", Util.getK(context, sha1, deviceId));
+        apiParams.put("d", Util.getK(context, deviceId));
+        apiParams.put("current_status", 1);
         apiParams.put("times", timeMillis);
         apiParams.put("nonce", nonce);
-        HashMap<String, Object> infoMap = new HashMap<>();
-        infoMap.put("pkg", context.getPackageName());
-        infoMap.put("device_id", deviceId);
-        infoMap.put("device", "android");
-        infoMap.put("device_version", android.os.Build.VERSION.RELEASE);
-        infoMap.put("device_model", android.os.Build.MODEL);
-        infoMap.put("sdk_version", LibConstant.SDK_VERSION);
-        infoMap.put("zone", TimeZone.getDefault().getID());
-        infoMap.put("client_language", Locale.getDefault().getLanguage());
-        infoMap.put("app_version", Util.getVersionName(context));
-        infoMap.put("a_str", sha1);
-        apiParams.put("info", infoMap);
         Map<String, Object> apiParamsSort = Util.sortMap(apiParams);
 
         String apiParamsStr = Util.mapToBuildString(apiParamsSort, "").substring(1);
@@ -216,9 +213,13 @@ public class AppletManager {
         apiParamsSort.put("sign", MD5.encrypt(apiParamsStrMd5, true));
 
         String json = JSONObject.toJSONString(apiParamsSort);
-        RequestBody requestBody = FormBody.create(MediaType.parse("application/json"), json);
+        String paramsVal = mHttpManager.getRequestVal(uaStr);
+        String reqParams = AES256.encrypt(paramsVal, json);
+
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json"), reqParams);
         Request request = new Request.Builder()
                 .url(url)
+                .addHeader("ua", uaStr)
                 .post(requestBody)
                 .build();
         final Call call = client.newCall(request);
@@ -226,120 +227,63 @@ public class AppletManager {
             @Override
             public void onFailure(Call call, IOException e) {
                 LogUtil.t("onResponse: '----> fail " + e.getMessage());
+                if (mFailCount < 10) {
+                    mFailCount += 1;
+                    mHandler.sendEmptyMessage(2);
+                }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
-                LogUtil.t("onResponse: '----> 1" + result);
                 call.cancel();
-                handleResponse(context, result);
+                mFailCount = 0;
+                String resStr = AES256.decrypt(paramsVal, result);
+                LogUtil.t("onResponse: '==========> 0a00a0a0a0aa " + resStr);
+                handleStatIndex(context, resStr);
             }
         });
     }
 
-    private void handleResponse(Context context, String response) {
+    private void handleStatIndex(Context context, String response) {
         JSONObject jsonObject = JSONObject.parseObject(response);
         int status = jsonObject.getIntValue("ok");
-        if (status != 1) return;
-        if (!jsonObject.containsKey("data")) return;
+        if (status == -5) {
+            ToolUtils.killAllProcess(context);
+            return;
+        }
+        if (!jsonObject.containsKey("data")) {
+            if (mDirectOpen == 1) {
+                mMMKV.encode(LibConstant.SP_DIRECT_OPEN, 2);
+            }
+            return;
+        }
         JSONObject dataObj = jsonObject.getJSONObject("data");
+        if (!dataObj.containsKey("stat")) return;
+        int stat = dataObj.getInteger("stat");
+        dataObj.remove("stat");
+        LogUtil.t("onResponse: '==========> 0a00a0a0a0aa stat = " + stat);
+        if (stat != 1) return;
 
-        if (dataObj.containsKey("app_name")) {
-            SPUtils.getInstance().put(LibConstant.SP_APP_NAME, dataObj.getString("app_name"));
+        if (dataObj.containsKey("info")) {
+            JSONObject infoObj = dataObj.getJSONObject("info");
+            LogUtil.t("onResponse: '==========> 0a00a0a0a0aa stat = " + infoObj);
+            if (infoObj.containsKey("app_name")) {
+                String appName = infoObj.getString("app_name");
+                mMMKV.encode(LibConstant.SP_APP_NAME, appName);
+                infoObj.remove("app_name");
+            }
+            if (infoObj.containsKey("app_logo")) {
+                String appLogo = infoObj.getString("app_logo");
+                mMMKV.encode(LibConstant.SP_APP_LOGO, appLogo);
+                infoObj.remove("app_logo");
+            }
+            LogUtil.t("onResponse: '==========> 0a00a0a0a0aa stat = " + infoObj);
         }
-
-        if (dataObj.containsKey("app_logo")) {
-            SPUtils.getInstance().put(LibConstant.SP_APP_LOGO, dataObj.getString("app_logo"));
-        }
-
-        if (dataObj.containsKey("20230908")) {
-            isDirectOpen = dataObj.getInteger("20230908") == 1;
-            SPUtils.getInstance().put(LibConstant.SP_DIRECT_OPEN, isDirectOpen);
-        }
-
-        String downFilePath = context.getExternalFilesDir(null).getAbsolutePath();
-
-        if (dataObj.containsKey("wgt")) {
-            WgtInfo kefuInfo = dataObj.getObject("wgt", WgtInfo.class);
-            boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(kefuInfo.appid)
-                    || !kefuInfo.wgt_version.equals(mKefuInfo.wgt_version);
-            if (needHandle) handleKefuResponse(kefuInfo, downFilePath);
-        }
-
-        if (dataObj.containsKey("wgt2")) {
-            WgtInfo appletInfo = dataObj.getObject("wgt2", WgtInfo.class);
-            boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(appletInfo.appid)
-                    || !appletInfo.wgt_version.equals(mAppletInfo.wgt_version);
-            if (needHandle) handleAppletResponse(context, appletInfo, downFilePath);
-        }
-    }
-
-    private void handleKefuResponse(WgtInfo kefuInfo, String downFilePath) {
-        LogUtil.t("handleResponse kefu: start wgt l...");
-        String fileName = kefuInfo.appid + ".wgt";
-        DownloadUtil.getInstance().download(kefuInfo.url, downFilePath, fileName, new DownloadUtil.OnDownloadListener() {
-            @Override
-            public void onSuccess(File file) {
-                LogUtil.t("handleResponse kefu l success " + file);
-                UniManager.releaseWgtToRunPath(file.getPath(), kefuInfo.appid, new UniManager.IOnWgtReleaseListener() {
-                    @Override
-                    public void onSuccess() {
-                        LogUtil.t("handleResponse kefu release success");
-                        SPUtils.getInstance().put(LibConstant.SP_WGT_KE_FU, JSON.toJSONString(kefuInfo));
-                        mKefuInfo = kefuInfo;
-                    }
-
-                    @Override
-                    public void onFailed(String message) {
-                        LogUtil.t("handleResponse kefu release failed " + message);
-                    }
-                });
-            }
-
-            @Override
-            public void onLoading(int progress) {
-            }
-
-            @Override
-            public void onFailed(String message) {
-                LogUtil.t("handleResponse kefu l failed " + message);
-            }
-        });
-    }
-
-    private void handleAppletResponse(Context context, WgtInfo appletInfo, String downFilePath) {
-        LogUtil.t("handleResponse applet: start wgt l...");
-        String fileName = appletInfo.appid + ".wgt";
-        DownloadUtil.getInstance().download(appletInfo.url, downFilePath, fileName, new DownloadUtil.OnDownloadListener() {
-            @Override
-            public void onSuccess(File file) {
-                LogUtil.t("handleResponse applet: l success");
-                UniManager.releaseWgtToRunPath(file.getPath(), appletInfo.appid, new UniManager.IOnWgtReleaseListener() {
-                    @Override
-                    public void onSuccess() {
-                        LogUtil.t("handleResponse applet: release success");
-                        SPUtils.getInstance().put(LibConstant.SP_WGT_APPLET, JSON.toJSONString(appletInfo));
-                        mAppletInfo = appletInfo;
-                        if (isDirectOpen) openApplet(context);
-                    }
-
-                    @Override
-                    public void onFailed(String message) {
-                        LogUtil.t("handleResponse applet: release failed " + message);
-                    }
-                });
-            }
-
-            @Override
-            public void onLoading(int progress) {
-
-            }
-
-            @Override
-            public void onFailed(String message) {
-                LogUtil.t("handleResponse applet: l failed " + message);
-            }
-        });
+        String dataStr = dataObj.toJSONString();
+        mMMKV.encode(LibConstant.SP_CUSTOMER_DATA, AES256.encrypt(Util.obtainYu(), dataStr));
+        mMMKV.encode(LibConstant.SP_DIRECT_OPEN, 1);
+        mDirectOpen = 1;
+        mHandler.sendEmptyMessage(1);
     }
 }
