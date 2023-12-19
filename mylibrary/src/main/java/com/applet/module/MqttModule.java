@@ -41,6 +41,7 @@ public class MqttModule extends UniModule {
     private UniJSCallback mCallback;
     private boolean isRegisterMqttBroadcastReceiver = false;
     private IMqttServiceAidlInterface mIMqttServiceAidlInterface;
+    private MqttBroadcastReceiver mMqttBroadcastReceiver;
 
     private class MqttBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -85,7 +86,8 @@ public class MqttModule extends UniModule {
         if (!isRegisterMqttBroadcastReceiver) {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(Mqtt.INTENT_ACTION_EVENT_BUS);
-            mUniSDKInstance.getContext().registerReceiver(new MqttBroadcastReceiver(), intentFilter);
+            mMqttBroadcastReceiver = new MqttBroadcastReceiver();
+            mUniSDKInstance.getContext().registerReceiver(mMqttBroadcastReceiver, intentFilter);
             isRegisterMqttBroadcastReceiver = true;
         }
 
@@ -206,6 +208,7 @@ public class MqttModule extends UniModule {
         Intent intent = new Intent(mUniSDKInstance.getContext(), MqttClientService.class);
         mUniSDKInstance.getContext().stopService(intent);
         mUniSDKInstance.getContext().unbindService(serviceConnection);
+        mUniSDKInstance.getContext().unregisterReceiver(mMqttBroadcastReceiver);
         super.onActivityDestroy();
     }
 

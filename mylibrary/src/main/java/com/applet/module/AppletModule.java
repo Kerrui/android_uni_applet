@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.applet.feature.LibConstant;
-import com.applet.feature.util.LogUtil;
 import com.applet.feature.util.Util;
 import com.applet.tool.AES256;
 import com.tencent.mmkv.MMKV;
