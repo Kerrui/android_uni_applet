@@ -80,7 +80,7 @@ dependencies {
             'uniapp-v8-release.aar',
             'uniMPSDK-V2-release.aar',
             'AliyunPlayer-5.5.0.0-full.aar',
-            'serviceLibrary-release-335.aar',
+            'serviceLibrary-release-4.2.aar',
             'audio-mp3aac-release.aar',
             'media-release.aar',
             'oauth-google-release.aar',

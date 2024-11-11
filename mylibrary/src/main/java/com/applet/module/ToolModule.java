@@ -2,6 +2,8 @@ package com.applet.module;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -9,8 +11,8 @@ import android.provider.Settings;
 import android.view.WindowManager;
 
 import com.alibaba.fastjson.JSONObject;
-import com.applet.feature.ApplicationBroadcast;
 import com.applet.feature.LibConstant;
+import com.applet.feature.util.LogUtil;
 import com.applet.tool.PermissionManager;
 import com.applet.tool.ToolUtils;
 import com.applet.tool.location.LocationManager;
@@ -26,6 +28,7 @@ public class ToolModule extends UniModule {
     public static final String INTENT_ACTION_APPLICATION = "com.lib.const.APPLICATION";
 
     private boolean isRegisterApplicationBroadcastReceiver = false;
+    private BroadcastReceiver mApplicationBroadcastReceiver;
 
     @UniJSMethod(uiThread = true)
     public void getCurrentLocation(JSONObject params, UniJSCallback callback) {
@@ -125,29 +128,36 @@ public class ToolModule extends UniModule {
         return result;
     }
 
-    private ApplicationBroadcast mBroadcastReceiver;
-
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @UniJSMethod(uiThread = true)
     public void installAppListener(JSONObject params, UniJSCallback callback) {
         if (!isRegisterApplicationBroadcastReceiver) {
-            mBroadcastReceiver = new ApplicationBroadcast(new ApplicationBroadcast.ApplicationBroadcastListener() {
+            mApplicationBroadcastReceiver = new BroadcastReceiver() {
                 @Override
-                public void onAction(JSONObject actionObj) {
-                    callback.invokeAndKeepAlive(actionObj);
+                public void onReceive(Context context, Intent intent) {
+                    try {
+                        int type = intent.getIntExtra("type", 0);
+                        LogUtil.t("ApplicationBroadcastReceiver type = " + type);
+                        if (type == 0) return;
+                        JSONObject actionObj = new JSONObject();
+                        actionObj.put("type", type);
+                        callback.invokeAndKeepAlive(actionObj);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            });
+            };
 
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(ToolModule.INTENT_ACTION_APPLICATION);
-            mUniSDKInstance.getContext().registerReceiver(mBroadcastReceiver, intentFilter);
+            mUniSDKInstance.getContext().registerReceiver(mApplicationBroadcastReceiver, intentFilter);
             isRegisterApplicationBroadcastReceiver = true;
         }
     }
 
     @Override
     public void onActivityDestroy() {
-        mUniSDKInstance.getContext().unregisterReceiver(mBroadcastReceiver);
+        mUniSDKInstance.getContext().unregisterReceiver(mApplicationBroadcastReceiver);
         super.onActivityDestroy();
     }
 }
