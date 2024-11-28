@@ -1,18 +1,18 @@
 package com.applet.uni_applet;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
-import com.applet.feature.util.LogUtil;
-import com.applet.mylibrary.AppLibSdk;
-import com.applet.mylibrary.OnAppLibInitializeListener;
+import com.applet.feature.AppletManager;
+import com.applet.feature.change.ChangePackage;
 import com.example.uni_applet.R;
 
 import androidx.appcompat.app.AppCompatActivity;
-import io.dcloud.feature.sdk.DCUniMPSDK;
-import io.dcloud.feature.sdk.Interface.IOnUniMPEventCallBack;
+
+import io.dcloud.common.DHInterface.SplashView;
 import io.dcloud.feature.sdk.Interface.IUniMP;
-import io.dcloud.feature.unimp.DCUniMPJSCallback;
+import io.dcloud.feature.unimp.config.UniMPOpenConfiguration;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,37 +23,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DCUniMPSDK.getInstance().setOnUniMPEventCallBack(new IOnUniMPEventCallBack() {
-            @Override
-            public void onUniMPEventReceive(String appId, String event, Object data, DCUniMPJSCallback callback) {
-                LogUtil.t("onUniMPEventReceive app id = " + appId + " event = " + event);
-                //AppLibSdk.getInstance().openKFApp(MainActivity.this, "", "",true, true);
-                if (event.equals("applet_event_open_customer_service")) {
-                    String faceUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-r3Y_vyQLZ55F8hCsS65hQXKRoKcOqYrgw&usqp=CAU";
-                    String uid = "1244522";
-                    AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid, true);
-                }
-            }
-        });
 
         findViewById(R.id.btn_init).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppLibSdk.getInstance().initEngine(MainActivity.this, new OnAppLibInitializeListener() {
-                    @Override
-                    public void onInitFinished(boolean success) {
-                        LogUtil.t("app lib applet init finish " + success);
-                    }
-                });
+
+
+//                IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
+
+                ChangePackage.INSTANCE.changePackageRequest(MainActivity.this,null,1);
+//                ChangePackage.INSTANCE.activeRequest(MainActivity.this,2);
+
             }
         });
 
         findViewById(R.id.btn_applet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String faceUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM-r3Y_vyQLZ55F8hCsS65hQXKRoKcOqYrgw&usqp=CAU";
-                String uid = "1244522";
-                AppLibSdk.getInstance().openKFApp(MainActivity.this, faceUrl, uid,false);
+                new Handler().postDelayed(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__3932C1F");
+
+                    }
+                },3000);
             }
         });
 
@@ -61,11 +55,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    IUniMP uniMP = DCUniMPSDK.getInstance().openUniMP(MainActivity.this, "__UNI__18DF11F");
+                    UniMPOpenConfiguration uniMPOpenConfiguration = new UniMPOpenConfiguration();
+                    uniMPOpenConfiguration.splashClass = SplashView.class;
+                    uniMPOpenConfiguration.extraData.put("darkmode", "light");
+                    IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
+
+//                    new Handler().postDelayed(new Runnable(){
+//
+//                        @Override
+//                        public void run() {
+//                            IUniMP currentUniMP = MPStack.getInstance().getCurrentUniMP();
+//                            currentUniMP.closeUniMP();
+//                        }
+//                    },13000);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+
+
     }
 }

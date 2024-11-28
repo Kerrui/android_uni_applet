@@ -8,12 +8,12 @@ def mfph = [
 
 android {
     namespace 'com.example.uni_applet'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.uni_applet"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0.1"
         manifestPlaceholders = mfph
@@ -25,25 +25,25 @@ android {
     }
 
     signingConfigs {
-        config {
-            storeFile file("../applet.jks")
-            storePassword "applet90."
-            keyAlias "applet"
-            keyPassword "applet90."
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
+//        config {
+//            storeFile file("../applet.jks")
+//            storePassword "applet90."
+//            keyAlias "applet"
+//            keyPassword "applet90."
+//            v1SigningEnabled true
+//            v2SigningEnabled true
+//        }
     }
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.config
-            minifyEnabled true
+//            signingConfig signingConfigs.config
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
         }
         release {
-            signingConfig signingConfigs.config
-            minifyEnabled true
+//            signingConfig signingConfigs.config
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
         }
     }
@@ -69,12 +69,13 @@ android {
 dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation project(path: ':applet')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation fileTree(dir: 'libs', include: [
-            'android-gif-drawable-release@1.2.23.aar',
+            'android-gif-drawable-1.2.28.aar',
             'breakpad-build-release.aar',
             'debug-server-release.aar',
             'uniapp-v8-release.aar',
@@ -86,6 +87,7 @@ dependencies {
             'oauth-google-release.aar',
             'weex_videoplayer-release.aar',
             'agora-microsoft-release.aar',
+            'OpenInstall_v2.6.2.jar',
     ])
 
     implementation 'androidx.appcompat:appcompat:1.0.0'
@@ -120,5 +122,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-appset:16.0.2'
     implementation 'com.tencent:mmkv:1.2.16'
 
-    implementation project(':mylibrary')
+    implementation project(':and_module_uni_plugin')
 }
