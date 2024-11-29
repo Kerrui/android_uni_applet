@@ -31,3 +31,4 @@ google-services.json
 
 # Android Profiling
 *.hprof
+/and_module_uni_plugin/

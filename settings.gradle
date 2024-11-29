@@ -3,6 +3,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url 'https://jitpack.io' }
     }
 }
 dependencyResolutionManagement {
@@ -16,4 +17,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "uni_applet"
 include ':app'
-include ':mylibrary'
+include ':and_module_uni_plugin'
+include ':applet'

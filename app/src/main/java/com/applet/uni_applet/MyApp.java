@@ -1,12 +1,13 @@
 package com.applet.uni_applet;
 
-import android.app.Activity;
-import android.os.Bundle;
 
-import com.applet.feature.util.LogUtil;
-import com.applet.mylibrary.AlienApplicationListener;
-import com.applet.mylibrary.AppLibSdk;
-import com.applet.mylibrary.OnAppLibInitializeListener;
+import android.media.tv.interactive.AppLinkInfo;
+
+import com.and.uniplugin.PluginInit;
+import com.and.uniplugin.feature.util.LogUtil;
+import com.applet.feature.AppLibSdk;
+import com.applet.feature.LibApp;
+import com.applet.feature.OnAppLibInitializeListener;
 
 import io.dcloud.application.DCloudApplication;
 
@@ -14,28 +15,24 @@ public class MyApp extends DCloudApplication {
 
     private static final String TAG = "MyApp";
 
+    public static int a = 0;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
+        PluginInit pluginInit = new PluginInit.Builder(this)
+                .setOpenInstallEnable(false)
+                .build();
+        pluginInit.init();
+
+//        LibApp.init(this);
         AppLibSdk.getInstance().initEngine(this, new OnAppLibInitializeListener() {
             @Override
             public void onInitFinished(boolean success) {
                 LogUtil.t("app lib applet init finish " + success);
             }
         });
-
-        registerActivityLifecycleCallbacks(new AlienApplicationListener(new AlienApplicationListener.IMyApplicationListener() {
-            @Override
-            public void onActivityChange(String circle, Activity activity, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onAppForegroundChange(boolean isForeground) {
-
-            }
-        }));
 
     }
 }
