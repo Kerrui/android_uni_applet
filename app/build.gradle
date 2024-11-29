@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'xml-class-guard'
 }
 
 def mfph = [
@@ -123,4 +124,11 @@ dependencies {
     implementation 'com.tencent:mmkv:1.2.16'
 
     implementation project(':and_module_uni_plugin')
+}
+
+xmlClassGuard {
+    findAndConstraintReferencedIds = false
+    //用于增量混淆的 mapping 文件
+    mappingFile = file("xml-class-mapping.txt")
+
 }
