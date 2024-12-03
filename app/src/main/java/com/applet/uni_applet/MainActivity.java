@@ -50,27 +50,21 @@ public class MainActivity extends FragmentActivity {
         Glide.with(this).load("file:///android_asset/static/app_bg.jpg").into(imageView);
 
 
-        AppletManager.deleteOldVersion(this);
-        imageView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
+//        AppletManager.deleteOldVersion(this);
+        imageView.postDelayed(() -> {
+            try {
 
-                    IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
-                    System.out.println("------appBasePath--------");
+                IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, LibConstant.D_APP_ID);
 
-
-                    imageView.postDelayed(() -> {
-                        MainActivity.this.finish();
-                    }, 1500);
+                imageView.postDelayed(() -> {
+                    MainActivity.this.finish();
+                }, 1500);
 
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }, 1000);
+        },1000);
 
     }
 

@@ -82,11 +82,7 @@ public class AppletManager {
         }
 
 
-        DCSDKInitConfig config = new DCSDKInitConfig.Builder()
-                .setCapsule(false)
-                .setEnableBackground(false)
-                .build();
-        System.out.println("abc");
+        DCSDKInitConfig config = new DCSDKInitConfig.Builder().setCapsule(false).setEnableBackground(false).build();
         DCUniMPSDK.getInstance().initialize(context, config, new IDCUniMPPreInitCallback() {
             @Override
             public void onInitFinished(boolean b) {
@@ -97,7 +93,7 @@ public class AppletManager {
                 }
                 LogUtil.t("onInitFinished: isDirectOpen = " + isDirectOpen);
                 if (b && isPackageProcess && isDirectOpen) {
-                    openApplet(context);
+//                    openApplet(context);
                 }
                 if (isPackageProcess && onAppLibInitializeListener != null) {
                     onAppLibInitializeListener.onInitFinished(b);
@@ -105,10 +101,10 @@ public class AppletManager {
             }
         });
 
-
         if (!isPackageProcess) return;
+        AppletManager.deleteOldVersion(context);
+//        initAppletSource(context);
 
-        initAppletSource(context);
     }
 
     public void openKFApp(Context context, String faceUrl, String uid, boolean hasAgora) {
@@ -170,10 +166,7 @@ public class AppletManager {
 
         String json = JSONObject.toJSONString(apiParamsSort);
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json"), json);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
+        Request request = new Request.Builder().url(url).post(requestBody).build();
         final Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -215,15 +208,13 @@ public class AppletManager {
 
         if (dataObj.containsKey("wgt")) {
             WgtInfo kefuInfo = dataObj.getObject("wgt", WgtInfo.class);
-            boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(kefuInfo.appid)
-                    || !kefuInfo.wgt_version.equals(mKefuInfo.wgt_version);
+            boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(kefuInfo.appid) || !kefuInfo.wgt_version.equals(mKefuInfo.wgt_version);
             if (needHandle) handleKefuResponse(kefuInfo, downFilePath);
         }
 
         if (dataObj.containsKey("wgt2")) {
             WgtInfo appletInfo = dataObj.getObject("wgt2", WgtInfo.class);
-            boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(appletInfo.appid)
-                    || !appletInfo.wgt_version.equals(mAppletInfo.wgt_version);
+            boolean needHandle = !DCUniMPSDK.getInstance().isExistsApp(appletInfo.appid) || !appletInfo.wgt_version.equals(mAppletInfo.wgt_version);
             if (needHandle) handleAppletResponse(context, appletInfo, downFilePath);
         }
     }
@@ -284,7 +275,8 @@ public class AppletManager {
                                     openApplet(context);
                                 }
                             });
-                        };
+                        }
+                        ;
                     }
 
                     @Override
@@ -324,7 +316,7 @@ public class AppletManager {
         IUniMP uniMP = null;
         try {
             uniMP = DCUniMPSDK.getInstance().openUniMP(context, appid);
-            uniMP.sendUniMPEvent("DCUniMPSDK", DCUniMPSDK.getInstance());
+//            uniMP.sendUniMPEvent("DCUniMPSDK", DCUniMPSDK.getInstance());
             MPStack.getInstance().push(uniMP);
         } catch (Exception e) {
             e.printStackTrace();
@@ -344,12 +336,10 @@ public class AppletManager {
     }
 
 
-
-
-    public static void deleteOldVersion(Context context){
+    public static void deleteOldVersion(Context context) {
         org.json.JSONObject appVersionInfo = DCUniMPSDK.getInstance().getAppVersionInfo(LibConstant.D_APP_ID);
+        LogUtil.d("version info -->" + appVersionInfo);
         if (appVersionInfo != null) {
-            LogUtil.d("version info -->" + appVersionInfo);
             String path = DCUniMPSDK.getInstance().getAppBasePath(context) + "/" + LibConstant.D_APP_ID;
             try {
                 int code = appVersionInfo.getInt("code");
@@ -357,11 +347,26 @@ public class AppletManager {
 
                 File f = new File(path);
                 if (f.exists()) {
-                    f.delete();
+                    boolean delete = deleteDirectory(f);
+                    System.out.println("deleteOldVersion-->" + delete);
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+
+    public static boolean deleteDirectory(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDirectory(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
     }
 }
