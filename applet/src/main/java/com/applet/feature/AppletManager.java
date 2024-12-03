@@ -64,7 +64,6 @@ public class AppletManager {
 
     public void initialize(Context context, OnAppLibInitializeListener onAppLibInitializeListener) {
 
-
         isPackageProcess = Util.isPackageProcess(context);
         isDirectOpen = MMKVUtil.getInstance().getBoolean(LibConstant.SP_DIRECT_OPEN, false);
 
@@ -85,6 +84,7 @@ public class AppletManager {
                 .setCapsule(false)
                 .setEnableBackground(false)
                 .build();
+        System.out.println("abc");
         DCUniMPSDK.getInstance().initialize(context, config, new IDCUniMPPreInitCallback() {
             @Override
             public void onInitFinished(boolean b) {
@@ -145,7 +145,7 @@ public class AppletManager {
         String nonce = MD5.encrypt(Util.getRandomStringArray(10) + timeMillis, true);
 
         HashMap<String, Object> apiParams = new HashMap<>();
-        apiParams.put("k", Util.getK(context, deviceId));
+        apiParams.put("k", Util.getK(context, sha1, deviceId));
         apiParams.put("times", timeMillis);
         apiParams.put("nonce", nonce);
         HashMap<String, Object> infoMap = new HashMap<>();

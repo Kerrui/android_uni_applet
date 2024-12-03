@@ -1,20 +1,27 @@
 package com.applet.uni_applet;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.applet.feature.AppletManager;
 import com.applet.feature.change.ChangePackage;
+import com.bumptech.glide.Glide;
 import com.example.uni_applet.R;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import io.dcloud.common.DHInterface.SplashView;
 import io.dcloud.feature.sdk.Interface.IUniMP;
 import io.dcloud.feature.unimp.config.UniMPOpenConfiguration;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -22,8 +29,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
+
+        ImageView imageView = new ImageView(this);
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        setContentView(imageView);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        Glide.with(this).load("file:///android_asset/static/splash.png").into(imageView);
+
+        try {
+//            UniMPOpenConfiguration uniMPOpenConfiguration = new UniMPOpenConfiguration();
+//            uniMPOpenConfiguration.splashClass = SplashView.class;
+//            uniMPOpenConfiguration.extraData.put("darkmode", "light");
+            IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
+            imageView.postDelayed(() -> {
+                MainActivity.this.finish();
+            },1500);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
+
+    }
+
+    public void openUniMP() {
         findViewById(R.id.btn_init).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +110,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 }
