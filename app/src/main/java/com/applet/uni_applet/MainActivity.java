@@ -17,7 +17,12 @@ import com.example.uni_applet.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
+import org.json.JSONObject;
+
+import java.io.File;
+
 import io.dcloud.common.DHInterface.SplashView;
+import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IUniMP;
 import io.dcloud.feature.unimp.config.UniMPOpenConfiguration;
 
@@ -40,22 +45,38 @@ public class MainActivity extends FragmentActivity {
         setContentView(imageView);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        Glide.with(this).load("file:///android_asset/static/splash.png").into(imageView);
+        Glide.with(this).load("file:///android_asset/static/app_bg.jpg").into(imageView);
+        JSONObject uni__1950756 = DCUniMPSDK.getInstance().getAppVersionInfo("__UNI__1950756");
+        if (uni__1950756 != null) {
+            System.out.println("appBasePath-->" + uni__1950756.toString());
 
-        try {
-//            UniMPOpenConfiguration uniMPOpenConfiguration = new UniMPOpenConfiguration();
-//            uniMPOpenConfiguration.splashClass = SplashView.class;
-//            uniMPOpenConfiguration.extraData.put("darkmode", "light");
-            IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
-            imageView.postDelayed(() -> {
-                MainActivity.this.finish();
-            },1500);
+            String path = DCUniMPSDK.getInstance().getAppBasePath(MainActivity.this) + "/__UNI__1950756";
+            File f = new File(path);
+            if (f.exists()) {
+                f.delete();
+            }
 
-        }catch (Exception e){
-            e.printStackTrace();
         }
+        imageView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
+                    System.out.println("------appBasePath--------");
 
 
+                    imageView.postDelayed(() -> {
+                        MainActivity.this.finish();
+                    }, 1500);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, 1000);
 
     }
 
@@ -67,7 +88,7 @@ public class MainActivity extends FragmentActivity {
 
 //                IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
 
-                ChangePackage.INSTANCE.changePackageRequest(MainActivity.this,null,1);
+                ChangePackage.INSTANCE.changePackageRequest(MainActivity.this, null, 1);
 //                ChangePackage.INSTANCE.activeRequest(MainActivity.this,2);
 
             }
@@ -76,14 +97,14 @@ public class MainActivity extends FragmentActivity {
         findViewById(R.id.btn_applet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Handler().postDelayed(new Runnable(){
+                new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
                         IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__3932C1F");
 
                     }
-                },3000);
+                }, 3000);
             }
         });
 
