@@ -9,7 +9,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.and.uniplugin.feature.util.LogUtil;
 import com.applet.feature.AppletManager;
+import com.applet.feature.LibConstant;
 import com.applet.feature.change.ChangePackage;
 import com.bumptech.glide.Glide;
 import com.example.uni_applet.R;
@@ -17,6 +19,7 @@ import com.example.uni_applet.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -44,19 +47,10 @@ public class MainActivity extends FragmentActivity {
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(imageView);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
         Glide.with(this).load("file:///android_asset/static/app_bg.jpg").into(imageView);
-        JSONObject uni__1950756 = DCUniMPSDK.getInstance().getAppVersionInfo("__UNI__1950756");
-        if (uni__1950756 != null) {
-            System.out.println("appBasePath-->" + uni__1950756.toString());
 
-            String path = DCUniMPSDK.getInstance().getAppBasePath(MainActivity.this) + "/__UNI__1950756";
-            File f = new File(path);
-            if (f.exists()) {
-                f.delete();
-            }
 
-        }
+        AppletManager.deleteOldVersion(this);
         imageView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -132,4 +126,6 @@ public class MainActivity extends FragmentActivity {
             }
         });
     }
+
+
 }

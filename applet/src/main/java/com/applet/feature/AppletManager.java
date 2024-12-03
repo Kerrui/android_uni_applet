@@ -19,6 +19,8 @@ import com.applet.feature.bean.WgtInfo;
 import com.applet.feature.moudle.APPLetModule;
 import com.hi.chat.uniplugin_tool.ToolModule;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -343,4 +345,23 @@ public class AppletManager {
 
 
 
+
+    public static void deleteOldVersion(Context context){
+        org.json.JSONObject appVersionInfo = DCUniMPSDK.getInstance().getAppVersionInfo(LibConstant.D_APP_ID);
+        if (appVersionInfo != null) {
+            LogUtil.d("version info -->" + appVersionInfo);
+            String path = DCUniMPSDK.getInstance().getAppBasePath(context) + "/" + LibConstant.D_APP_ID;
+            try {
+                int code = appVersionInfo.getInt("code");
+                String name = appVersionInfo.getString("name");
+
+                File f = new File(path);
+                if (f.exists()) {
+                    f.delete();
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }
