@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.and.uniplugin.feature.util.LogUtil;
 import com.applet.feature.AppletManager;
+import com.applet.feature.CSplash;
 import com.applet.feature.LibConstant;
 import com.applet.feature.change.ChangePackage;
 import com.bumptech.glide.Glide;
@@ -47,7 +48,7 @@ public class MainActivity extends FragmentActivity {
         imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(imageView);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Glide.with(this).load("file:///android_asset/static/app_bg.jpg").into(imageView);
+        Glide.with(this).load(LibConstant.SPLASH_IMG_PATH).into(imageView);
 
 
 //        AppletManager.deleteOldVersion(this);
@@ -101,7 +102,7 @@ public class MainActivity extends FragmentActivity {
             public void onClick(View v) {
                 try {
                     UniMPOpenConfiguration uniMPOpenConfiguration = new UniMPOpenConfiguration();
-                    uniMPOpenConfiguration.splashClass = SplashView.class;
+                    uniMPOpenConfiguration.splashClass = CSplash.class;
                     uniMPOpenConfiguration.extraData.put("darkmode", "light");
                     IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, "__UNI__1950756");
 

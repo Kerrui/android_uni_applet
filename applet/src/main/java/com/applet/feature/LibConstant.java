@@ -4,7 +4,7 @@ public class LibConstant {
 
 
     public static final String D_APP_ID = "__UNI__1950756";
-
+    public static final String SPLASH_IMG_PATH = "file:///android_asset/static/splash.png";
     private static final String env = "res";
     public static final String SDK_VERSION = "1.0.3";
 

@@ -25,12 +25,6 @@ import io.dcloud.feature.unimp.config.UniMPOpenConfiguration;
 public class APPLetModule extends UniModule {
 
     @UniJSMethod(uiThread = false)
-    public void setUid(JSONObject params) {
-        String uid = params.getString("uid");
-        MMKVUtil.getInstance().put(LibConstant.SP_UID, uid);
-    }
-
-    @UniJSMethod(uiThread = false)
     public String getDeviceModel() {
         return Build.MODEL;
     }
@@ -44,15 +38,6 @@ public class APPLetModule extends UniModule {
     public String SDKVer() {
         return LibConstant.SDK_VERSION;
     }
-
-
-//    @UniJSMethod(uiThread = false)
-//    public boolean isInstall(JSONObject params) {
-//        String appid = params.getString("appid");
-//        boolean existsApp = DCUniMPSDK.getInstance().isExistsApp(appid);
-//        int size = MPStack.getInstance().size();
-//        return existsApp;
-//    }
 
 
     @UniJSMethod(uiThread = false)
@@ -93,73 +78,8 @@ public class APPLetModule extends UniModule {
         }
     }
 
-    @UniJSMethod(uiThread = true)
-    public void setCustomerExtra(JSONObject jsonObject) {
-        IUniMP currentUniMP = MPStack.getInstance().getCurrentUniMP();
-        if (currentUniMP == null) {
-            return;
-        }
-        String appid = currentUniMP.getAppid();
-        MMKVUtil.getInstance().saveJSONObject("INFO_" + appid, jsonObject);
-    }
 
 
-    @UniJSMethod(uiThread = true)
-    public JSONObject getCustomerInfo() {
-        String host = LibConstant.getHost();
-        String bucket = "";
-        String bucket_pic = "";
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("host", host);
-        jsonObject.put("bucket", bucket);
-        jsonObject.put("bucket_pic", bucket_pic);
-        return jsonObject;
-    }
-
-
-//    @UniJSMethod(uiThread = true)
-//    public void open(JSONObject jsonObject, JSCallback callback) {
-//        JSONObject ret = new JSONObject();
-//        String path = jsonObject.getString("path");
-//        File wgt = new File(path);
-//        if (!wgt.exists() || !wgt.isFile()) {
-//            ret.put("succeed", false);
-//            ret.put("error", "file not exists");
-//            callback.invoke(ret);
-//            return;
-//        }
-//        String appid = jsonObject.getString("appid");
-//        UniManager.releaseWgtToRunPath(path, appid, new UniManager.IOnWgtReleaseListener() {
-//            @Override
-//            public void onSuccess() {
-//                UniMPOpenConfiguration configuration = new UniMPOpenConfiguration();
-//                JSONObject extraData = jsonObject.getJSONObject("extraData");
-//                try {
-//                    org.json.JSONObject jsonObject = new org.json.JSONObject(extraData.toJSONString());
-//                    configuration.extraData = jsonObject;
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                IUniMP uniMP = AppletManager.openUniMP(mUniSDKInstance.getContext(), appid, configuration);
-//                if (uniMP == null) {
-//                    ret.put("succeed", false);
-//                    ret.put("error", "open failed");
-//                    callback.invoke(ret);
-//                } else {
-//                    ret.put("succeed", true);
-//                    callback.invoke(ret);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailed(String message) {
-//                ret.put("succeed", false);
-//                ret.put("error", message);
-//                callback.invoke(ret);
-//            }
-//        });
-//    }
 
     @UniJSMethod(uiThread = false)
     public boolean putPackageData(JSONObject params) {
@@ -178,65 +98,6 @@ public class APPLetModule extends UniModule {
     }
 
     @UniJSMethod(uiThread = false)
-    public JSONObject getCustomerData(JSONObject params) {
-//        SharedPreferences sp = mUniSDKInstance.getContext().getSharedPreferences("applet", Context.MODE_PRIVATE);
-
-        String spKey;
-        spKey = params.containsKey("name") ? params.getString("name") : "";
-        if (TextUtils.isEmpty(spKey)) {
-            spKey = MMKVUtil.getInstance().getString("aName", "");
-        }
-        String dataJsonStr = MMKVUtil.getInstance().getString(spKey, "");
-        if (TextUtils.isEmpty(spKey) || TextUtils.isEmpty(dataJsonStr)) {
-            JSONObject info = new JSONObject();
-            info.put("page_home", "https://xxx.com");
-            info.put("bucket", "https://xxx.com/");
-            info.put("bucket_pic", "https://img.chatapp.com/");
-            info.put("batch", "wb");
-            info.put("split_line_bound", "+NUUoa/cyd");
-            info.put("split_line_random", "0148cc1cc133717cde5");
-            JSONObject push = new JSONObject();
-            push.put("token", "a");
-            push.put("active", "b");
-            push.put("login", "c");
-            push.put("register", "d");
-            push.put("pay", "e");
-            push.put("payLtvHigh", "f");
-            push.put("freeCallComplete", "g");
-            JSONObject result = new JSONObject();
-            return result;
-        }
-
-        JSONObject result = new JSONObject();
-        JSONObject dataObj = JSON.parseObject(dataJsonStr);
-        JSONObject dataInfoObj = dataObj.getJSONObject("info");
-        JSONObject dataPushObj = dataObj.containsKey("push") ? dataObj.getJSONObject("push") : null;
-
-        JSONObject info = new JSONObject();
-        info.put("page_home", dataInfoObj.getString("page_home"));
-        info.put("bucket", dataInfoObj.getString("bucket"));
-        info.put("bucket_pic", dataInfoObj.getString("bucket_pic"));
-        info.put("batch", dataInfoObj.getString("batch"));
-        info.put("split_line_bound", dataInfoObj.getString("split_line_bound"));
-        info.put("split_line_random", dataInfoObj.getString("split_line_random"));
-        result.put("info", info);
-
-        if (dataPushObj != null) {
-            JSONObject push = new JSONObject();
-            push.put("token", dataPushObj.getString("token"));
-            push.put("active", dataPushObj.getString("active"));
-            push.put("login", dataPushObj.getString("login"));
-            push.put("register", dataPushObj.getString("register"));
-            push.put("pay", dataPushObj.getString("pay"));
-            push.put("payLtvHigh", dataPushObj.getString("payLtvHigh"));
-            push.put("freeCallComplete", dataPushObj.getString("freeCallComplete"));
-            result.put("push", push);
-        }
-
-        return result;
-    }
-
-
     public static boolean isInstall(String appid) {
         return DCUniMPSDK.getInstance().isExistsApp(appid);
     }

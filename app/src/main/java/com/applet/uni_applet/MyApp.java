@@ -22,11 +22,8 @@ public class MyApp extends DCloudApplication {
         super.onCreate();
 
         PluginInit pluginInit = new PluginInit.Builder(this)
-                .setOpenInstallEnable(false)
                 .build();
         pluginInit.init();
-
-//        LibApp.init(this);
         AppLibSdk.getInstance().initEngine(this, new OnAppLibInitializeListener() {
             @Override
             public void onInitFinished(boolean success) {

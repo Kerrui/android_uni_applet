@@ -12,13 +12,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Uni_applet">
+        android:theme="@style/TranslucentTheme">
 
         <activity
             android:name="com.applet.uni_applet.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/DCloudTheme">
+            android:theme="@style/TranslucentTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
