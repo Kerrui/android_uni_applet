@@ -57,7 +57,6 @@ public class AppletManager {
 
         if (!isPackageProcess) return;
         AppletManager.deleteOldVersion(context);
-//        initAppletSource(context);
 
     }
 

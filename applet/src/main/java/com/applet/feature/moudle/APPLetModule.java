@@ -42,6 +42,8 @@ public class APPLetModule extends UniModule {
 
     @UniJSMethod(uiThread = false)
     public void setDefaultApplet(JSONObject jsonObject) {
+        System.out.println("setDefaultApplet-->"+jsonObject.toJSONString());
+        //{"appid":"__UNI__8463C26"}
         String appid = jsonObject.getString("appid");
         JSONObject info = jsonObject.getJSONObject("info");
 
@@ -59,8 +61,9 @@ public class APPLetModule extends UniModule {
     public void setAppletInfo(JSONObject jsonObject) {
         String appid = jsonObject.getString("appid");
         JSONObject info = jsonObject.getJSONObject("info");
-        MMKVUtil.getInstance().saveJSONObject( appid, info);
+        MMKVUtil.getInstance().saveJSONObject(appid, info);
     }
+
 
 
     @Deprecated

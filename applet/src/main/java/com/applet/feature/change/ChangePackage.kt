@@ -39,7 +39,7 @@ object ChangePackage {
     private const val isDev = true
 
     val host = if (isDev) {
-        "https://doghkxnbdedct.cloudfront.net/mini/"
+        "https://doghkxnbdedct.cloudfront.net/mini/index"
     } else {
         ""
     }
@@ -137,37 +137,6 @@ object ChangePackage {
     }
 
 
-    fun activeRequest(context: Context, activeStatus: Int) {
-        val ua = generateHeader(context)
-        val jsonObject = JSONObject()
-        jsonObject["action"] = activeStatus
-        setDefaultParamAndSign(context, jsonObject)
-        val kymd51 = "${ua.subSequence(10, 30)}$dataKey"
-        val kymd52 = MD5.encrypt(kymd51, true)
-        val body = AES256.encrypt(kymd52, jsonObject.toJSONString())
-
-        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), body)
-        val request =
-            Request.Builder().url(host + "active").addHeader("ua", ua).post(requestBody).build()
-        val client = HttpClient.getClient()
-        client.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "activeRequest onFailure: ${e.message}")
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-
-
-                val body = response.body()
-                val string = body?.string()
-                println("activeRequest onResponse: ${AES256.decrypt(kymd52, string)}")
-            }
-
-        })
-
-    }
-
-
     fun changePackageRequest(context: Context, appid: String?, contentStatus: Int) {
         val jsonObject = JSONObject()
         if (appid?.isNotEmpty() == true) {
@@ -201,7 +170,7 @@ object ChangePackage {
                     if (status == 1) {
                         handleChangePackage(context, jsonObject, responseJSONObject)
                     } else if (attempt < maxAttempts) {
-//                        Thread.sleep(10000)
+                        Thread.sleep(2000)
                         attempt++
                         val encodeRequest = getEncodeRequest(context, jsonObject)
                         this.password = encodeRequest.password
@@ -287,7 +256,7 @@ object ChangePackage {
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("text/plain"), body)
         val request =
-            Request.Builder().url(host + "index").addHeader("ua", ua).post(requestBody).build()
+            Request.Builder().url(host).addHeader("ua", ua).post(requestBody).build()
         return EncodeRequest(request, kymd52)
     }
 }
