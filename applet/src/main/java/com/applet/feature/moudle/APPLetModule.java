@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.and.uniplugin_log.mmkv.MMKVUtil;
 import com.applet.feature.AppletManager;
+import com.applet.feature.CSplash;
 import com.applet.feature.LibConstant;
 import com.applet.feature.UniManager;
 import com.applet.feature.bean.MPStack;
@@ -42,8 +43,6 @@ public class APPLetModule extends UniModule {
 
     @UniJSMethod(uiThread = false)
     public void setDefaultApplet(JSONObject jsonObject) {
-        System.out.println("setDefaultApplet-->"+jsonObject.toJSONString());
-        //{"appid":"__UNI__8463C26"}
         String appid = jsonObject.getString("appid");
         JSONObject info = jsonObject.getJSONObject("info");
 
@@ -120,6 +119,7 @@ public class APPLetModule extends UniModule {
             @Override
             public void onSuccess() {
                 UniMPOpenConfiguration configuration = new UniMPOpenConfiguration();
+                configuration.splashClass = CSplash.class;
                 JSONObject extraData = jsonObject.getJSONObject("extraData");
                 try {
                     org.json.JSONObject jsonObject = new org.json.JSONObject(extraData.toJSONString());

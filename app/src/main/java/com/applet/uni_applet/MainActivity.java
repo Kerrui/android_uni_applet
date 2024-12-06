@@ -2,7 +2,6 @@ package com.applet.uni_applet;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,13 +17,6 @@ import com.applet.feature.CSplash;
 import com.applet.feature.LibConstant;
 import com.applet.feature.bean.WgtInfo;
 import com.bumptech.glide.Glide;
-
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IUniMP;
@@ -69,11 +61,9 @@ public class MainActivity extends FragmentActivity {
 
                     }
                 }
-//                mqttTest();
-
-//                imageView.postDelayed(() -> {
-//                    MainActivity.this.finish();
-//                }, 1500);
+                imageView.postDelayed(() -> {
+                    MainActivity.this.finish();
+                }, 1500);
 
 
             } catch (Exception e) {
