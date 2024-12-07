@@ -2,6 +2,7 @@
 buildscript {
     dependencies {
         classpath "com.github.liujingxing:XmlClassGuard:1.2.6"
+        classpath "io.github.goldfish07.reschiper:plugin:0.1.0-rc4"
     }
 }
 
