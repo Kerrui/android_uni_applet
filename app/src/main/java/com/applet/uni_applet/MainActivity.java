@@ -63,7 +63,7 @@ public class MainActivity extends FragmentActivity {
                 }
                 imageView.postDelayed(() -> {
                     MainActivity.this.finish();
-                }, 1500);
+                }, 100);
 
 
             } catch (Exception e) {
