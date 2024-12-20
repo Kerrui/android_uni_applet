@@ -164,25 +164,7 @@ public class APPLetModule extends UniModule {
         }
         String dataJsonStr = MMKVUtil.getInstance().getString(spKey, "");
         if (TextUtils.isEmpty(spKey) || TextUtils.isEmpty(dataJsonStr)) {
-            JSONObject info = new JSONObject();
-            info.put("page_home", "https://xxx.com");
-            info.put("bucket", "https://xxx.com/");
-            info.put("bucket_pic", "https://img.chatapp.com/");
-            info.put("batch", "wb");
-            info.put("split_line_bound", "+NUUoa/cyd");
-            info.put("split_line_random", "0148cc1cc133717cde5");
-            JSONObject push = new JSONObject();
-            push.put("token", "a");
-            push.put("active", "b");
-            push.put("login", "c");
-            push.put("register", "d");
-            push.put("pay", "e");
-            push.put("payLtvHigh", "f");
-            push.put("freeCallComplete", "g");
-            JSONObject result = new JSONObject();
-            //result.put("info", info);
-            //result.put("push", push);
-            return result;
+            return null;
         }
 
         JSONObject result = new JSONObject();
@@ -192,6 +174,8 @@ public class APPLetModule extends UniModule {
 
         JSONObject info = new JSONObject();
         info.put("page_home", dataInfoObj.getString("page_home"));
+        info.put("app_name", dataInfoObj.getString("app_name"));
+        info.put("app_logo", dataInfoObj.getString("app_logo"));
         info.put("bucket", dataInfoObj.getString("bucket"));
         info.put("bucket_pic", dataInfoObj.getString("bucket_pic"));
         info.put("batch", dataInfoObj.getString("batch"));
