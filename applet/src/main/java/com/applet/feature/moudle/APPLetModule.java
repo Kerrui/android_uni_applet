@@ -6,13 +6,13 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.and.uniplugin_log.mmkv.MMKVUtil;
 import com.applet.feature.AppletManager;
 import com.applet.feature.CSplash;
 import com.applet.feature.LibConstant;
 import com.applet.feature.UniManager;
 import com.applet.feature.bean.MPStack;
 import com.applet.feature.bean.WgtInfo;
+import com.hi.chat.uniplugin_log.mmkv.MMKVUtil;
 
 import java.io.File;
 
@@ -45,12 +45,20 @@ public class APPLetModule extends UniModule {
     public void setDefaultApplet(JSONObject jsonObject) {
         String appid = jsonObject.getString("appid");
         JSONObject info = jsonObject.getJSONObject("info");
+//
+//        WgtInfo wgtInfo = new WgtInfo();
+//        wgtInfo.appid = appid;
+//        if (info != null) {
+//            wgtInfo.url = info.getString("url");
+//            wgtInfo.wgt_version = info.getString("version");
+//        }
 
-        WgtInfo wgtInfo = new WgtInfo();
-        wgtInfo.appid = appid;
+        JSONObject wgtInfo = new JSONObject();
+        wgtInfo.put("appid", appid);
+
         if (info != null) {
-            wgtInfo.url = info.getString("url");
-            wgtInfo.wgt_version = info.getString("version");
+            wgtInfo.put("url", info.getString("url"));
+            wgtInfo.put("wgt_version", info.getString("version"));
         }
         MMKVUtil.getInstance().put(LibConstant.SP_WGT_APPLET, JSON.toJSONString(wgtInfo));
 
@@ -79,10 +87,6 @@ public class APPLetModule extends UniModule {
         }
     }
 
-    @UniJSMethod(uiThread = true)
-    public int uniBasePlatform() {
-        return 0;
-    }
 
     @UniJSMethod(uiThread = false)
     public boolean putPackageData(JSONObject params) {
@@ -108,8 +112,6 @@ public class APPLetModule extends UniModule {
     public static void open(Context context, JSONObject jsonObject, DCUniMPJSCallback callback) {
         JSONObject ret = new JSONObject();
         String path = jsonObject.getString("path");
-
-
         File wgt = new File(path);
         if (!wgt.exists() || !wgt.isFile()) {
             ret.put("succeed", false);
@@ -118,11 +120,6 @@ public class APPLetModule extends UniModule {
             return;
         }
         String appid = jsonObject.getString("appid");
-        String channelId = jsonObject.getString("channel_id");
-        JSONObject info = jsonObject.getJSONObject("info");
-
-        MMKVUtil.getInstance().saveJSONObject(channelId, info);
-
         UniManager.releaseWgtToRunPath(path, appid, new UniManager.IOnWgtReleaseListener() {
             @Override
             public void onSuccess() {
@@ -154,50 +151,6 @@ public class APPLetModule extends UniModule {
             }
         });
     }
-
-    @UniJSMethod(uiThread = false)
-    public JSONObject getCustomerData(JSONObject params) {
-        String spKey;
-        spKey = params.containsKey("name") ? params.getString("name") : "";
-        if (TextUtils.isEmpty(spKey)) {
-            spKey = MMKVUtil.getInstance().getString("aName", "");
-        }
-        String dataJsonStr = MMKVUtil.getInstance().getString(spKey, "");
-        if (TextUtils.isEmpty(spKey) || TextUtils.isEmpty(dataJsonStr)) {
-            return null;
-        }
-
-        JSONObject result = new JSONObject();
-        JSONObject dataObj = JSON.parseObject(dataJsonStr);
-        JSONObject dataInfoObj = dataObj.getJSONObject("info");
-        JSONObject dataPushObj = dataObj.containsKey("push") ? dataObj.getJSONObject("push") : null;
-
-        JSONObject info = new JSONObject();
-        info.put("page_home", dataInfoObj.getString("page_home"));
-        info.put("app_name", dataInfoObj.getString("app_name"));
-        info.put("app_logo", dataInfoObj.getString("app_logo"));
-        info.put("bucket", dataInfoObj.getString("bucket"));
-        info.put("bucket_pic", dataInfoObj.getString("bucket_pic"));
-        info.put("batch", dataInfoObj.getString("batch"));
-        info.put("split_line_bound", dataInfoObj.getString("split_line_bound"));
-        info.put("split_line_random", dataInfoObj.getString("split_line_random"));
-        result.put("info", info);
-
-        if (dataPushObj != null) {
-            JSONObject push = new JSONObject();
-            push.put("token", dataPushObj.getString("token"));
-            push.put("active", dataPushObj.getString("active"));
-            push.put("login", dataPushObj.getString("login"));
-            push.put("register", dataPushObj.getString("register"));
-            push.put("pay", dataPushObj.getString("pay"));
-            push.put("payLtvHigh", dataPushObj.getString("payLtvHigh"));
-            push.put("freeCallComplete", dataPushObj.getString("freeCallComplete"));
-            result.put("push", push);
-        }
-
-        return result;
-    }
-
 
     public static void initCallback(Context context) {
         DCUniMPSDK.getInstance().setUniMPOnCloseCallBack(s -> MPStack.getInstance().remove(s));

@@ -3,14 +3,11 @@ package com.applet.uni_applet;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.tv.interactive.AppLinkInfo;
-
-import com.and.uniplugin.ApplicationListener;
-import com.and.uniplugin.PluginInit;
-import com.and.uniplugin.feature.util.LogUtil;
 import com.applet.feature.AppLibSdk;
-import com.applet.feature.LibApp;
 import com.applet.feature.OnAppLibInitializeListener;
+import com.hi.chat.uniplugin.ApplicationListener;
+import com.hi.chat.uniplugin.PluginInit;
+import com.hi.chat.uniplugin.feature.util.LogUtil;
 import com.hi.chat.uniplugin_mqtt.event.MyFirebaseMessagingService;
 import com.hi.chat.uniplugin_tool.ToolModule;
 

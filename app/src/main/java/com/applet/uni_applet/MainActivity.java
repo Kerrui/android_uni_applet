@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.alibaba.fastjson.JSONObject;
-import com.and.uniplugin_log.mmkv.MMKVUtil;
 import com.applet.feature.AppletManager;
 import com.applet.feature.CSplash;
 import com.applet.feature.LibConstant;
 import com.applet.feature.bean.WgtInfo;
 import com.bumptech.glide.Glide;
+import com.hi.chat.uniplugin_log.mmkv.MMKVUtil;
 
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IUniMP;
@@ -52,7 +52,13 @@ public class MainActivity extends FragmentActivity {
                 if (jsonObject == null) {
                     IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, LibConstant.D_APP_ID, configuration);
                 } else {
-                    WgtInfo wgtInfo = JSONObject.parseObject(jsonObject.toJSONString(), WgtInfo.class);
+//                    WgtInfo wgtInfo = JSONObject.parseObject(jsonObject.toJSONString(), WgtInfo.class);
+
+                    WgtInfo wgtInfo = new WgtInfo();
+                    wgtInfo.appid = jsonObject.getString("appid");
+                    wgtInfo.url = jsonObject.getString("url");
+                    wgtInfo.wgt_version = jsonObject.getString("wgt_version");
+
                     String appid = wgtInfo.appid;
                     if (DCUniMPSDK.getInstance().isExistsApp(appid)) {
                         IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, appid, configuration);

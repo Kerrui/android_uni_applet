@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class WgtInfo implements Parcelable {
+public class WgtInfo  {
 
     public String appid;
     public String url;
@@ -14,33 +14,4 @@ public class WgtInfo implements Parcelable {
     public WgtInfo() {
     }
 
-    protected WgtInfo(Parcel in) {
-        appid = in.readString();
-        url = in.readString();
-        wgt_version = in.readString();
-    }
-
-    public static final Creator<WgtInfo> CREATOR = new Creator<WgtInfo>() {
-        @Override
-        public WgtInfo createFromParcel(Parcel in) {
-            return new WgtInfo(in);
-        }
-
-        @Override
-        public WgtInfo[] newArray(int size) {
-            return new WgtInfo[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(appid);
-        dest.writeString(url);
-        dest.writeString(wgt_version);
-    }
 }

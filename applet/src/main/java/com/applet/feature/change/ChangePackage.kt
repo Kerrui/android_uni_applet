@@ -8,18 +8,18 @@ import android.util.Log
 import android.view.WindowManager
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import com.and.uniplugin.feature.util.AES256
-import com.and.uniplugin.feature.util.DownloadUtil
-import com.and.uniplugin.feature.util.LogUtil
-import com.and.uniplugin.feature.util.MD5
-import com.and.uniplugin.feature.util.Util
-import com.and.uniplugin.net.HttpClient
-import com.and.uniplugin_log.mmkv.MMKVUtil
 import com.applet.feature.AppletManager
 import com.applet.feature.LibConstant
 import com.applet.feature.UniManager
 import com.applet.feature.bean.WgtInfo
-import com.hi.chat.uniplugin_tool.ToolModule
+import com.hi.chat.uniplugin.feature.util.AES256
+import com.hi.chat.uniplugin.feature.util.DownloadUtil
+import com.hi.chat.uniplugin.feature.util.LogUtil
+import com.hi.chat.uniplugin.feature.util.MD5
+import com.hi.chat.uniplugin.feature.util.Util
+import com.hi.chat.uniplugin.net.HttpClient
+import com.hi.chat.uniplugin_log.mmkv.MMKVUtil
+import com.hi.chat.uniplugin_tool.ToolUtil
 import okhttp3.Call
 import okhttp3.MediaType
 import okhttp3.Request
@@ -103,7 +103,7 @@ object ChangePackage {
     private fun generateHeader(context: Context): String {
         val sdk = Build.VERSION.SDK_INT.toString()
         val version = LibConstant.SDK_VERSION
-        val deviceID = ToolModule.getDeviceId(context)
+        val deviceID = ToolUtil.getDeviceId(context)
         val packageName = context.packageName
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val width = windowManager.defaultDisplay.width
