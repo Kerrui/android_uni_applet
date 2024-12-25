@@ -3,6 +3,9 @@ package com.applet.uni_applet;
 
 import android.app.Activity;
 import android.content.Intent;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.applet.feature.AppLibSdk;
 import com.applet.feature.OnAppLibInitializeListener;
 import com.hi.chat.uniplugin.ApplicationListener;
@@ -10,6 +13,7 @@ import com.hi.chat.uniplugin.PluginInit;
 import com.hi.chat.uniplugin.feature.util.LogUtil;
 import com.hi.chat.uniplugin_mqtt.event.MyFirebaseMessagingService;
 import com.hi.chat.uniplugin_tool.ToolModule;
+import com.hi.chat.uniplugin_tool.ToolUtil;
 
 import io.dcloud.application.DCloudApplication;
 
@@ -17,7 +21,6 @@ public class MyApp extends DCloudApplication {
 
     private static final String TAG = "MyApp";
 
-    public static int a = 0;
 
     @Override
     public void onCreate() {
@@ -42,12 +45,11 @@ public class MyApp extends DCloudApplication {
             @Override
             public void onAppForegroundChange(boolean isForeground) {
                 MyFirebaseMessagingService.sIsAppForeground = isForeground;
-                Intent intent = new Intent(ToolModule.INTENT_ACTION_APPLICATION);
+                Intent intent = new Intent(ToolUtil.INTENT_ACTION_APPLICATION);
                 intent.putExtra("action", isForeground ? 3 : 1);
-                sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MyApp.this).sendBroadcast(intent);
             }
         }));
-
 
 
     }
