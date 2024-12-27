@@ -43,7 +43,6 @@ public class MPStack {
     }
 
     public IUniMP remove(String appid) {
-        System.out.println("--->removee");
         IUniMP remove = mStack.remove(appid);
         return remove;
     }

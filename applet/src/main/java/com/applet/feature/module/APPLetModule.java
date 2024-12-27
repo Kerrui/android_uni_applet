@@ -1,4 +1,4 @@
-package com.applet.feature.moudle;
+package com.applet.feature.module;
 
 import android.content.Context;
 import android.os.Build;

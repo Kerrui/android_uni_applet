@@ -2,9 +2,8 @@ package com.applet.feature;
 
 import android.content.Context;
 
-import com.applet.feature.moudle.APPLetModule;
+import com.applet.feature.module.APPLetModule;
 import com.taobao.weex.WXSDKEngine;
-import com.taobao.weex.common.WXException;
 
 /**
  * Created by Alien-super on 2023/9/21.
