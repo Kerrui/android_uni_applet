@@ -12,7 +12,6 @@ import com.hi.chat.uniplugin.ApplicationListener;
 import com.hi.chat.uniplugin.PluginInit;
 import com.hi.chat.uniplugin.feature.util.LogUtil;
 import com.hi.chat.uniplugin_mqtt.event.MyFirebaseMessagingService;
-import com.hi.chat.uniplugin_tool.ToolModule;
 import com.hi.chat.uniplugin_tool.ToolUtil;
 
 import io.dcloud.application.DCloudApplication;
@@ -45,9 +44,9 @@ public class MyApp extends DCloudApplication {
             @Override
             public void onAppForegroundChange(boolean isForeground) {
                 MyFirebaseMessagingService.sIsAppForeground = isForeground;
-                Intent intent = new Intent(ToolUtil.INTENT_ACTION_APPLICATION);
+                Intent intent = new Intent(ToolUtil.getIntentActionApplication(MyApp.this));
                 intent.putExtra("action", isForeground ? 3 : 1);
-                LocalBroadcastManager.getInstance(MyApp.this).sendBroadcast(intent);
+                sendBroadcast(intent);
             }
         }));
 

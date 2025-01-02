@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.alibaba.fastjson.JSONObject;
@@ -16,7 +17,11 @@ import com.applet.feature.CSplash;
 import com.applet.feature.LibConstant;
 import com.applet.feature.bean.WgtInfo;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hi.chat.uniplugin_log.mmkv.MMKVUtil;
+import com.hi.chat.uniplugin_mqtt.MqttUtil;
 
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IUniMP;
@@ -40,7 +45,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(imageView);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Glide.with(this).load(LibConstant.SPLASH_IMG_PATH).into(imageView);
-
+        saveFireBaseToken();
         AppletManager.deleteOldVersion(this);
         imageView.postDelayed(() -> {
             try {
@@ -77,6 +82,21 @@ public class MainActivity extends FragmentActivity {
             }
         }, 1000);
 
+
+
+    }
+
+
+    private void saveFireBaseToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    String token = task.getResult();
+                    MMKVUtil.getInstance().put(MqttUtil.FIRE_BASE_TOKEN, token);
+                }
+            }
+        });
     }
 
 
