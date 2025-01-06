@@ -11,7 +11,6 @@ import com.applet.feature.CSplash;
 import com.applet.feature.LibConstant;
 import com.applet.feature.UniManager;
 import com.applet.feature.bean.MPStack;
-import com.applet.feature.bean.WgtInfo;
 import com.hi.chat.uniplugin_log.mmkv.MMKVUtil;
 
 import java.io.File;
@@ -45,14 +44,6 @@ public class APPLetModule extends UniModule {
     public void setDefaultApplet(JSONObject jsonObject) {
         String appid = jsonObject.getString("appid");
         JSONObject info = jsonObject.getJSONObject("info");
-//
-//        WgtInfo wgtInfo = new WgtInfo();
-//        wgtInfo.appid = appid;
-//        if (info != null) {
-//            wgtInfo.url = info.getString("url");
-//            wgtInfo.wgt_version = info.getString("version");
-//        }
-
         JSONObject wgtInfo = new JSONObject();
         wgtInfo.put("appid", appid);
 
