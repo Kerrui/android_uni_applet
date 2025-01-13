@@ -11,14 +11,14 @@ def mfph = [
 
 android {
     namespace 'com.example.uni_applet'
-    compileSdk 34
+    compileSdk rootProject.ext.targetSdkVersion
 
     defaultConfig {
         applicationId "com.example.uni_applet"
-        minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0.1"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         manifestPlaceholders = mfph
 
         ndk {
