@@ -11,8 +11,6 @@ import com.taobao.weex.WXSDKEngine;
  */
 public class AppLibSdk {
 
-    private static final String TAG = "AppLibSdk";
-
     public AppLibSdk() {
     }
 

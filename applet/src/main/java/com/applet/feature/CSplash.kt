@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.hi.chat.uniplugin.LibConstant
 import io.dcloud.feature.sdk.Interface.IDCUniMPAppSplashView
 
 class CSplash: IDCUniMPAppSplashView {

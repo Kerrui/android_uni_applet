@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.applet.feature.bean.MPStack;
 import com.applet.feature.module.APPLetModule;
+import com.hi.chat.uniplugin.LibConstant;
 import com.hi.chat.uniplugin.feature.util.LogUtil;
 import com.hi.chat.uniplugin.feature.util.Util;
-import com.hi.chat.uniplugin_log.mmkv.MMKVUtil;
 
 import org.json.JSONException;
 
