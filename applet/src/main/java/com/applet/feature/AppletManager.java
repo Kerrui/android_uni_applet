@@ -19,7 +19,6 @@ import io.dcloud.feature.unimp.config.UniMPOpenConfiguration;
 
 public class AppletManager {
 
-    private boolean isDirectOpen = false;
     private boolean isPackageProcess;
 
 
@@ -37,7 +36,6 @@ public class AppletManager {
     public void initialize(Context context, OnAppLibInitializeListener onAppLibInitializeListener) {
 
         isPackageProcess = Util.isPackageProcess(context);
-        isDirectOpen = MMKVUtil.getInstance().getBoolean(LibConstant.SP_DIRECT_OPEN, false);
 
 
 
@@ -46,9 +44,8 @@ public class AppletManager {
             APPLetModule.initCallback(context);
             LogUtil.t("onInitFinished: isPackageProcess = " + isPackageProcess);
             if (isPackageProcess) {
-                LogUtil.d(LibConstant.SDK_VERSION + " initialize finish " + (b ? "success" : "failed"));
+//                LogUtil.d(LibConstant.SDK_VERSION + " initialize finish " + (b ? "success" : "failed"));
             }
-            LogUtil.t("onInitFinished: isDirectOpen = " + isDirectOpen);
 
             if (isPackageProcess && onAppLibInitializeListener != null) {
                 onAppLibInitializeListener.onInitFinished(b);

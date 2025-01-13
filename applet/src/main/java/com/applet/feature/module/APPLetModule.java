@@ -34,10 +34,6 @@ public class APPLetModule extends UniModule {
         return mUniSDKInstance.getContext().getPackageName();
     }
 
-    @UniJSMethod(uiThread = false)
-    public String SDKVer() {
-        return LibConstant.SDK_VERSION;
-    }
 
 
     @UniJSMethod(uiThread = false)
