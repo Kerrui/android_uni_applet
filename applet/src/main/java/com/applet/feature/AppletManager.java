@@ -94,7 +94,6 @@ public class AppletManager {
                 File f = new File(path);
                 if (f.exists()) {
                     boolean delete = deleteDirectory(f);
-                    System.out.println("deleteOldVersion-->" + delete);
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);
