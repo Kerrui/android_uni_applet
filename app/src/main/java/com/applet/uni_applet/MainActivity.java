@@ -14,14 +14,13 @@ import androidx.fragment.app.FragmentActivity;
 import com.alibaba.fastjson.JSONObject;
 import com.applet.feature.AppletManager;
 import com.applet.feature.CSplash;
-import com.applet.feature.LibConstant;
 import com.applet.feature.bean.WgtInfo;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.hi.chat.uniplugin_log.mmkv.MMKVUtil;
-import com.hi.chat.uniplugin_mqtt.MqttUtil;
+import com.hi.chat.uniplugin.LibConstant;
+import com.hi.chat.uniplugin.mmkv.MMKVUtil;
 
 import io.dcloud.feature.sdk.DCUniMPSDK;
 import io.dcloud.feature.sdk.Interface.IUniMP;
@@ -93,7 +92,7 @@ public class MainActivity extends FragmentActivity {
             public void onComplete(@NonNull Task<String> task) {
                 if (task.isSuccessful()) {
                     String token = task.getResult();
-                    MMKVUtil.getInstance().put(MqttUtil.FIRE_BASE_TOKEN, token);
+                    MMKVUtil.getInstance().put(LibConstant.FIRE_BASE_TOKEN, token);
                 }
             }
         });
