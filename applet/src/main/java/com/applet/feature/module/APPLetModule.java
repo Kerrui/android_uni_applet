@@ -47,7 +47,7 @@ public class APPLetModule extends UniModule {
             wgtInfo.put("url", info.getString("url"));
             wgtInfo.put("wgt_version", info.getString("version"));
         }
-        MMKVUtil.getInstance().put(LibConstant.SP_WGT_APPLET, JSON.toJSONString(wgtInfo));
+        MMKVUtil.getInstance().saveJSONObject(LibConstant.SP_WGT_APPLET, wgtInfo);
 
     }
 
@@ -155,5 +155,10 @@ public class APPLetModule extends UniModule {
                 }
             }
         });
+    }
+
+    @UniJSMethod(uiThread = true)
+    public int uniBasePlatform() {
+        return 0;
     }
 }
