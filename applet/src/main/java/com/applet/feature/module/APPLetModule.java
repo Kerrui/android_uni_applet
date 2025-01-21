@@ -11,7 +11,7 @@ import com.applet.feature.CSplash;
 import com.applet.feature.UniManager;
 import com.applet.feature.bean.MPStack;
 import com.hi.chat.uniplugin.LibConstant;
-import com.hi.chat.uniplugin_log.mmkv.MMKVUtil;
+import com.hi.chat.uniplugin.mmkv.MMKVUtil;
 
 import java.io.File;
 
