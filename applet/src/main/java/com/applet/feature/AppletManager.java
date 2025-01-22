@@ -50,8 +50,8 @@ public class AppletManager {
             }
         });
 
-        if (!isPackageProcess) return;
-        AppletManager.deleteOldVersion(context);
+//        if (!isPackageProcess) return;
+//        AppletManager.deleteOldVersion(context);
 
     }
 
