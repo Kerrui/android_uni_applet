@@ -45,25 +45,22 @@ public class MainActivity extends FragmentActivity {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         Glide.with(this).load(LibConstant.SPLASH_IMG_PATH).into(imageView);
         saveFireBaseToken();
-        AppletManager.deleteOldVersion(this);
+//        AppletManager.deleteOldVersion(this);
         imageView.postDelayed(() -> {
             try {
-
-
                 JSONObject jsonObject = MMKVUtil.getInstance().getJSONObject(LibConstant.SP_WGT_APPLET);
                 UniMPOpenConfiguration configuration = new UniMPOpenConfiguration();
                 configuration.splashClass = CSplash.class;
                 if (jsonObject == null) {
                     IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, LibConstant.D_APP_ID, configuration);
                 } else {
-//                    WgtInfo wgtInfo = JSONObject.parseObject(jsonObject.toJSONString(), WgtInfo.class);
-
                     WgtInfo wgtInfo = new WgtInfo();
                     wgtInfo.appid = jsonObject.getString("appid");
                     wgtInfo.url = jsonObject.getString("url");
                     wgtInfo.wgt_version = jsonObject.getString("wgt_version");
 
                     String appid = wgtInfo.appid;
+                    System.out.println("DCUniMPSDK.getInstance().isExistsApp(appid)-->"+DCUniMPSDK.getInstance().isExistsApp(appid));
                     if (DCUniMPSDK.getInstance().isExistsApp(appid)) {
                         IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, appid, configuration);
                     } else {
