@@ -2,6 +2,7 @@ package com.applet.feature.module;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -33,12 +34,20 @@ public class APPLetUtil {
             return;
         }
         String appid = jsonObject.getString("appid");
-        System.out.println("jsonObject===>"+jsonObject.toJSONString());
+        JSONObject info = jsonObject.getJSONObject("info");
+        String channelId = jsonObject.getString("channel_id");
+        if (!TextUtils.isEmpty(channelId) && info != null) {
+            JSONObject params = new JSONObject();
+            params.put("name",channelId);
+            params.put("data",info);
+            putPackageData(params);
+        }
+
         UniManager.releaseWgtToRunPath(path, appid, new UniManager.IOnWgtReleaseListener() {
             @Override
             public void onSuccess() {
                 File file = new File(path);
-                if(file.exists()){
+                if (file.exists()) {
                     file.delete();
                 }
 
@@ -51,20 +60,19 @@ public class APPLetUtil {
 
 //
                 JSONObject defaultApplet = MMKVUtil.getInstance().getJSONObject(LibConstant.SP_WGT_APPLET);
-                if(defaultApplet == null){
+                if (defaultApplet == null) {
                     AppletManager.close(LibConstant.D_APP_ID);
-                }else{
+                } else {
                     AppletManager.close(defaultApplet.getString("appid"));
                 }
+
+
 
 
 //                UniMPOpenConfiguration configuration = new UniMPOpenConfiguration();
 //                configuration.splashClass = CSplash.class;
 //                APPLetUtil.setDefaultApplet(jsonObject);
 //                IUniMP uniMP = AppletManager.openUniMP(context, appid, configuration);
-
-
-
 
 
             }
@@ -75,7 +83,7 @@ public class APPLetUtil {
                 ret.put("error", message);
                 callback.invoke(ret);
                 File file = new File(path);
-                if(file.exists()){
+                if (file.exists()) {
                     file.delete();
                 }
             }
@@ -93,7 +101,7 @@ public class APPLetUtil {
         JSONObject data = params.getJSONObject("data");
 
         MMKVUtil.getInstance().put("aName", aName);
-        MMKVUtil.getInstance().put(aName, JSON.toJSONString(data));
+        MMKVUtil.getInstance().saveJSONObject(aName, data);
 
         return true;
     }
@@ -118,5 +126,14 @@ public class APPLetUtil {
 
     }
 
+    public static JSONObject getCustomerData(JSONObject params) {
+
+        String aName = params.getString("name");
+        if (TextUtils.isEmpty(aName)) {
+            return null;
+        }
+        return MMKVUtil.getInstance().getJSONObject(aName);
+
+    }
 
 }

@@ -58,10 +58,13 @@ public class APPLetModule extends UniModule {
     }
 
     @UniJSMethod(uiThread = true)
-    public int imprenableFirmware() {
+    public int uniBasePlatform() {
         return 0;
     }
 
 
-
+    @UniJSMethod(uiThread = false)
+    public JSONObject  getCustomerData(JSONObject params) {
+        return APPLetUtil.getCustomerData(params);
+    }
 }
