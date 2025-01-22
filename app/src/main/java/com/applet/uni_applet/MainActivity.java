@@ -60,7 +60,6 @@ public class MainActivity extends FragmentActivity {
                     wgtInfo.wgt_version = jsonObject.getString("wgt_version");
 
                     String appid = wgtInfo.appid;
-                    System.out.println("DCUniMPSDK.getInstance().isExistsApp(appid)-->"+DCUniMPSDK.getInstance().isExistsApp(appid));
                     if (DCUniMPSDK.getInstance().isExistsApp(appid)) {
                         IUniMP uniMP = AppletManager.openUniMP(MainActivity.this, appid, configuration);
                     } else {
