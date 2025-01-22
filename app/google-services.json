@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "380115284261",
+    "project_id": "hichat-301114",
+    "storage_bucket": "hichat-301114.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38011528261:android:911ffebb4b8b49edeacc",
+        "android_client_info": {
+          "package_name": "com.example.uni_applet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380115284261-fih4blatmnrebha6hrg667vs4q0lnvo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.uni_applet",
+            "certificate_hash": "f80109a65000f97c80b6341a49c267fb4eeb65b0"
+          }
+        },
+        {
+          "client_id": "380115284261-s8p7i9o30uefj6494p2rud9rat8fe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.uni_applet",
+            "certificate_hash": "7582719d8a94d1ab2eed7ae60e8cae84212ece5e"
+          }
+        },
+        {
+          "client_id": "380115284261-7jo3gs1asshssutgdlvf3p5srvuuv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1IwZ358Qth-T3SdMpsC7FUTbeXqal-a0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380115284261-7jo3gs1asshssutgdgpdlvf3p5srvuuv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
