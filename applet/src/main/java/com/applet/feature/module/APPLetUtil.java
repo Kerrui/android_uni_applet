@@ -1,11 +1,13 @@
 package com.applet.feature.module;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.applet.feature.AppletManager;
 import com.applet.feature.CSplash;
+import com.applet.feature.SPActivity;
 import com.applet.feature.UniManager;
 import com.hi.chat.uniplugin.LibConstant;
 import com.hi.chat.uniplugin.mmkv.MMKVUtil;
@@ -31,27 +33,40 @@ public class APPLetUtil {
             return;
         }
         String appid = jsonObject.getString("appid");
+        System.out.println("jsonObject===>"+jsonObject.toJSONString());
         UniManager.releaseWgtToRunPath(path, appid, new UniManager.IOnWgtReleaseListener() {
             @Override
             public void onSuccess() {
-                UniMPOpenConfiguration configuration = new UniMPOpenConfiguration();
-                configuration.splashClass = CSplash.class;
-                JSONObject extraData = jsonObject.getJSONObject("extraData");
-                try {
-                    org.json.JSONObject jsonObject = new org.json.JSONObject(extraData.toJSONString());
-                    configuration.extraData = jsonObject;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                File file = new File(path);
+                if(file.exists()){
+                    file.delete();
                 }
-                IUniMP uniMP = AppletManager.openUniMP(context, appid, configuration);
-                if (uniMP == null) {
-                    ret.put("succeed", false);
-                    ret.put("error", "open failed");
-                    callback.invoke(ret);
-                } else {
-                    ret.put("succeed", true);
-                    callback.invoke(ret);
+
+                ret.put("succeed", true);
+                callback.invoke(ret);
+                Intent intent = new Intent(context, SPActivity.class);
+                intent.putExtra("data", jsonObject.toJSONString());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+
+//
+                JSONObject defaultApplet = MMKVUtil.getInstance().getJSONObject(LibConstant.SP_WGT_APPLET);
+                if(defaultApplet == null){
+                    AppletManager.close(LibConstant.D_APP_ID);
+                }else{
+                    AppletManager.close(defaultApplet.getString("appid"));
                 }
+
+
+//                UniMPOpenConfiguration configuration = new UniMPOpenConfiguration();
+//                configuration.splashClass = CSplash.class;
+//                APPLetUtil.setDefaultApplet(jsonObject);
+//                IUniMP uniMP = AppletManager.openUniMP(context, appid, configuration);
+
+
+
+
+
             }
 
             @Override
@@ -59,6 +74,10 @@ public class APPLetUtil {
                 ret.put("succeed", false);
                 ret.put("error", message);
                 callback.invoke(ret);
+                File file = new File(path);
+                if(file.exists()){
+                    file.delete();
+                }
             }
         });
     }
@@ -98,5 +117,6 @@ public class APPLetUtil {
         MMKVUtil.getInstance().saveJSONObject(LibConstant.SP_WGT_APPLET, wgtInfo);
 
     }
+
 
 }

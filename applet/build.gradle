@@ -40,10 +40,8 @@ android {
 dependencies {
 
     compileOnly fileTree(dir: '../app/libs', include: [
-            'uniapp-v8-release.aar',
-            'uniMPSDK-V2-release.aar',
-            'AliyunPlayer-5.5.0.0-full.aar',
-            'serviceLibrary-release-4.2.aar'
+            '*.aar',
+            '*.jar',
     ])
 
     implementation 'androidx.core:core-ktx:1.9.0'

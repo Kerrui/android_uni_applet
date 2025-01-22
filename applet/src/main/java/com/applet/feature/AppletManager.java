@@ -37,8 +37,6 @@ public class AppletManager {
 
         isPackageProcess = Util.isPackageProcess(context);
 
-
-
         DCSDKInitConfig config = new DCSDKInitConfig.Builder().setCapsule(false).setEnableBackground(false).build();
         DCUniMPSDK.getInstance().initialize(context, config, b -> {
             APPLetModule.initCallback(context);
@@ -56,8 +54,6 @@ public class AppletManager {
         AppletManager.deleteOldVersion(context);
 
     }
-
-
 
 
     public static IUniMP openUniMP(Context context, String appid) {
@@ -82,6 +78,12 @@ public class AppletManager {
         return uniMP;
     }
 
+    public static void close(String appid) {
+        IUniMP uniMP = MPStack.getInstance().getUniMP(appid);
+        if (uniMP != null) {
+            uniMP.closeUniMP();
+        }
+    }
 
     public static void deleteOldVersion(Context context) {
         org.json.JSONObject appVersionInfo = DCUniMPSDK.getInstance().getAppVersionInfo(LibConstant.D_APP_ID);

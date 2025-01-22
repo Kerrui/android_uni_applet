@@ -58,7 +58,10 @@ public class APPLetModule extends UniModule {
     }
 
     @UniJSMethod(uiThread = true)
-    public int uniBasePlatform() {
+    public int imprenableFirmware() {
         return 0;
     }
+
+
+
 }
